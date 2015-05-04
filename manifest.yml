@@ -1,0 +1,7 @@
+---
+applications:
+- name: deployment-tracker
+  memory: 128M
+  host: deployment-tracker
+  services:
+  - deployment-tracker-db
