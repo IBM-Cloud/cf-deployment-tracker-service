@@ -40,12 +40,28 @@ app.post('/', jsonParser, function(req, res) {
   if (!req.body) {
     return res.sendStatus(400);
   }
-  console.log("Application Name: " + req.body.application_name);
-  console.log("Application Space ID: " + req.body.space_id);
-  console.log("Application Version: " + req.body.application_version);
-  console.log("Application URIs: " + req.body.application_uris.join(', '));
-  res.status(201).json({
-    ok: true
+  var event = {};
+  if (req.body.application_name) {
+    event.application_name = req.body.application_name;
+  }
+  if (req.body.space_id) {
+    event.space_id = req.body.space_id;
+  }
+  if (req.body.application_version) {
+    event.application_version = req.body.application_version;
+  }
+  if (req.body.application_uris) {
+    event.application_uris = req.body.application_uris;
+  }
+  var eventsDB = deploymentTrackerDb.use('events');
+  eventsDB.insert(event, function(err, body) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({error: 'Internal Server Error'});
+    }
+    return res.status(201).json({
+      ok: true
+    });
   });
 });
 // Set the port number based on a command line switch, an environment variable, or a default value
