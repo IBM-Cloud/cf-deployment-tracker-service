@@ -22,3 +22,9 @@ Local configuration is done through a `.env` file. One environment variable, `VC
 Install the project's dependencies:
 
     $ npm install
+
+## Running
+
+Run the project through [Foreman](https://github.com/ddollar/foreman):
+
+    $ foreman start
