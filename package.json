@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/cloudant-labs/deployment-tracker",
   "dependencies": {
+    "body-parser": "^1.12.3",
     "cloudant": "^1.0.0-beta3",
     "commander": "^2.8.1",
     "dotenv": "^1.1.0",
