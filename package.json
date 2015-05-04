@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/cloudant-labs/deployment-tracker/issues"
   },
-  "homepage": "https://github.com/cloudant-labs/deployment-tracker"
+  "homepage": "https://github.com/cloudant-labs/deployment-tracker",
+  "dependencies": {
+    "express": "^4.12.3"
+  }
 }
