@@ -1,0 +1,23 @@
+{
+  "name": "deployment-tracker",
+  "version": "0.0.0",
+  "description": "Tracks deployments of sample applications",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cloudant-labs/deployment-tracker.git"
+  },
+  "keywords": [
+    "Cloudant",
+    "Bluemix"
+  ],
+  "author": "Bradley Holt <bradley.holt@us.ibm.com> (https://cloudant.com/)",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/cloudant-labs/deployment-tracker/issues"
+  },
+  "homepage": "https://github.com/cloudant-labs/deployment-tracker"
+}
