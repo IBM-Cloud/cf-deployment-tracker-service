@@ -46,3 +46,7 @@ Create a Cloudant service within Bluemix if one has not already been created:
 To deploy to Bluemix, simply:
 
     $ cf push
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE.txt).
