@@ -16,3 +16,9 @@ Local configuration is done through a `.env` file. One environment variable, `VC
     VCAP_SERVICES={"cloudantNoSQLDB": [{"name": "deployment-tracker-db","label": "cloudantNoSQLDB","plan": "Shared","credentials": {"username": "your-username","password": "your-password","host": "your-host","port": 443,"url": "https://your-username:your-password@your-host"}}]}
 
 **Note:**  Services created within Bluemix are automatically added to the `VCAP_SERVICES` environment variable. Therefore, no configuration is needed for Bluemix.
+
+## Installing
+
+Install the project's dependencies:
+
+    $ npm install
