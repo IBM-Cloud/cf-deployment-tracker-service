@@ -4,7 +4,8 @@
   "description": "Tracks deployments of sample applications",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "./admin.js db put"
   },
   "repository": {
     "type": "git",
