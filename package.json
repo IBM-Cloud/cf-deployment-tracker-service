@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/cloudant-labs/deployment-tracker",
   "dependencies": {
+    "cloudant": "^1.0.0-beta3",
     "express": "^4.12.3"
   }
 }
