@@ -29,9 +29,9 @@ var app = express();
   }
 })(app);
 
-var jsonParser = bodyParser.json();
+var urlEncodedParser = bodyParser.urlencoded();
 // Handle POSTing an event
-app.post('/', jsonParser, function(req, res) {
+app.post('/', urlEncodedParser, function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get('deployment-tracker-db');
   if (!deploymentTrackerDb) {
