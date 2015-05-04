@@ -40,3 +40,9 @@ Complete these steps first if you have not already:
 Create a Cloudant service within Bluemix if one has not already been created:
 
     $ cf create-service cloudantNoSQLDB Shared deployment-tracker-db
+
+## Deploying
+
+To deploy to Bluemix, simply:
+
+    $ cf push
