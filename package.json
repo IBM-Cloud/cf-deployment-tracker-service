@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "./admin.js db put && ./admin.js ddoc put"
+    "prepublish": "./admin.js db put && ./admin.js ddoc put",
+    "install": "./admin.js track"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "commander": "^2.8.1",
     "dotenv": "^1.1.0",
     "express": "^4.12.3",
-    "hbs": "^3.0.1"
+    "hbs": "^3.0.1",
+    "http-post": "^0.1.1"
   }
 }
