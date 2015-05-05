@@ -92,7 +92,7 @@ program
         var ddoc = {
           _id: '_design/deployments',
           views: {
-            name_space_version: {
+            apps: {
               map: 'function(doc) { emit([doc.application_name, doc.space_id, doc.application_version]); }',
               reduce: '_count',
             }
