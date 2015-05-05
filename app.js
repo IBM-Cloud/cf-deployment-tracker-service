@@ -39,7 +39,7 @@ app.post('/', urlEncodedParser, function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get('deployment-tracker-db');
   if (!deploymentTrackerDb) {
-    return res.status(500).json({ error: 'No database server configured' })
+    return res.status(500).json({ error: 'No database server configured' });
   }
   if (!req.body) {
     return res.sendStatus(400);
