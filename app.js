@@ -32,7 +32,22 @@ var app = express();
 var urlEncodedParser = bodyParser.urlencoded();
 // Get metrics overview
 app.get('/', function(req, res) {
-  res.render('index', { title: 'Hey', message: 'Hello there!'});
+  var app = req.app;
+  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use('events');
+  eventsDb.view('deployments', 'apps', {group_level: 1}, function(err, body) {
+    var apps = [];
+    body.rows.map(function(row) {
+      apps.push({
+        name: row.key[0],
+        count: row.value
+      });
+    });
+    res.render('index', {apps: apps});
+  });
 });
 // Handle POSTing an event
 app.post('/', urlEncodedParser, function(req, res) {
