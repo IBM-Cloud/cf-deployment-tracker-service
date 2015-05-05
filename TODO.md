@@ -1,5 +1,6 @@
 # TODO
 
+* Add a time-based component to the metrics
 * Zero-downtime deployments
 * Custom domain name and SSL certificate
 * Tracking npm package
