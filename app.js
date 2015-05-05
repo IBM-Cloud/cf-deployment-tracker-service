@@ -30,6 +30,10 @@ var app = express();
 })(app);
 
 var urlEncodedParser = bodyParser.urlencoded();
+// Get metrics overview
+app.get('/', function(req, res) {
+  res.render('index', { title: 'Hey', message: 'Hello there!'});
+});
 // Handle POSTing an event
 app.post('/', urlEncodedParser, function(req, res) {
   var app = req.app;
@@ -66,6 +70,9 @@ app.post('/', urlEncodedParser, function(req, res) {
 });
 // Set the port number based on a command line switch, an environment variable, or a default value
 app.set('port', program.port || process.env.PORT || 3000);
+// Set the view engine
+app.set('view engine', 'html');
+app.engine('html', require('hbs').__express);
 // Serve static assets
 app.use(express.static(path.join(__dirname, 'public')));
 // Create the HTTP server
