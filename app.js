@@ -57,8 +57,8 @@ app.post('/', urlEncodedParser, function(req, res) {
   if (req.body.application_uris) {
     event.application_uris = req.body.application_uris;
   }
-  var eventsDB = deploymentTrackerDb.use('events');
-  eventsDB.insert(event, function(err, body) {
+  var eventsDb = deploymentTrackerDb.use('events');
+  eventsDb.insert(event, function(err, body) {
     if (err) {
       console.error(err);
       return res.status(500).json({error: 'Internal Server Error'});
