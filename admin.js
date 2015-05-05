@@ -76,6 +76,72 @@ program
     console.log();
   });
 
+program
+  .command('ddoc <method>')
+  .description('Create (put) or delete design documents')
+  .action(function(method, options) {
+    var deploymentTrackerDb = app.get('deployment-tracker-db');
+    if (!deploymentTrackerDb) {
+      console.error('No database configured');
+      return;
+    }
+    var eventsDb = deploymentTrackerDb.use('events');
+    switch (method) {
+      case 'put':
+        // TODO: Allow this to handle migrations
+        var ddoc = {
+          _id: '_design/deployments',
+          views: {
+            name_space_version: {
+              map: 'function(doc) { emit([doc.application_name, doc.space_id, doc.application_version]); }',
+              reduce: '_count',
+            }
+          }
+        };
+        eventsDb.insert(ddoc, function(err, body) {
+          if (!err) {
+            console.log('Design document created');
+          } else {
+            if (409 == err.status_code) {
+              console.log('Design document already exists');
+            } else {
+              console.error('Error creating design document database');
+            }
+          }
+        });
+        break;
+      case 'delete':
+        eventsDb.get('_design/deployments', function(err, doc) {
+          if (!err) {
+            eventsDb.destroy('_design/deployments', doc._rev, function(err, body) {
+              if (!err) {
+                console.log('Design document deleted');
+              } else {
+                if (404 == err.status_code) {
+                  console.log('Design document does not exist');
+                } else {
+                  console.error('Error deleting design document');
+                }
+              }
+            });
+          } else {
+            if (404 == err.status_code) {
+              console.log('Design document does not exist');
+            } else {
+              console.error('Error getting design document');
+            }
+          }
+        });
+        break;
+    }
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ ddoc put');
+    console.log('    $ ddoc delete');
+    console.log();
+  });
+
 program.parse(process.argv);
 
 //-------------------------------------------------------------------------------
