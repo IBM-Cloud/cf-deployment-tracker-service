@@ -1,4 +1,8 @@
 ---
+declared-services:
+  deployment-tracker-db:
+    label: cloudantNoSQLDB
+    plan: Shared
 applications:
 - name: deployment-tracker
   memory: 128M
