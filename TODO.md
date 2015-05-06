@@ -1,6 +1,8 @@
 # TODO
 
 * Add a time-based component to the metrics
+* Unit tests
+* Continuous integration
 * Zero-downtime deployments
 * Custom domain name and SSL certificate
 * Tracking npm package
