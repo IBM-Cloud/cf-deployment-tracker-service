@@ -1,5 +1,6 @@
 # TODO
 
+* Lookup info about the user spaced on their space ID
 * Add a time-based component to the metrics
 * Unit tests
 * Continuous integration
