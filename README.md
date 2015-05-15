@@ -45,14 +45,14 @@ To deploy to Bluemix, simply:
 
 ## Data Collected
 
-The Deployment Tracker service collects the following data about individual deployments of sample apps to IBM Bluemix:
+The Deployment Tracker service collects the following data about individual deployments of sample applications to IBM Bluemix:
 
 * Application Name (`application_name`)
 * Space ID (`space_id`)
 * Application Version (`application_version`)
 * Application URIs (`application_uris`)
 
-This data is collected from the `VCAP_APPLICATION` environment variable in IBM Bluemix. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix. Only deployments of sample apps that include code to ping the Deployment Tracker service will be tracked.
+This data is collected from the `VCAP_APPLICATION` environment variable in IBM Bluemix. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
 
 ## License
 
