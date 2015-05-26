@@ -59,7 +59,9 @@ app.post('/', urlEncodedParser, function(req, res) {
   if (!req.body) {
     return res.sendStatus(400);
   }
-  var event = {};
+  var event = {
+    date_received: new Date().toJSON()
+  };
   if (req.body.application_name) {
     event.application_name = req.body.application_name;
   }
