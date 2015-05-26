@@ -7,7 +7,6 @@ var express = require('express'),
     program = require('commander'),
     dotenv = require('dotenv'),
     bodyParser = require('body-parser');
-
 dotenv.load();
 
 var app = express();
@@ -62,6 +61,15 @@ app.post('/', urlEncodedParser, function(req, res) {
   var event = {
     date_received: new Date().toJSON()
   };
+  if (req.body.date_sent) {
+    event.date_sent = req.body.date_sent;
+  }
+  if (req.body.code_version) {
+    event.code_version = req.body.code_version;
+  }
+  if (req.body.repository_url) {
+    event.repository_url = req.body.repository_url;
+  }
   if (req.body.application_name) {
     event.application_name = req.body.application_name;
   }
