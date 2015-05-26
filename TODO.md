@@ -5,13 +5,9 @@
  * Data to include in POST
  * Environment variable data used to collect this information
 * Unit tests
-* Track info from package.json
- * Version
- * GitHub repository URL (or homepage)
 * Track deployments to other non-Bluemix platforms
 * Continuous integration
 * Zero-downtime deployments
-* Custom domain name and SSL certificate
 * Tracking npm package
 * SSL tracking (client side)
 * Interactive opt-out (if possible)
