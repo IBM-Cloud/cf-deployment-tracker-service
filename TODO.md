@@ -1,6 +1,6 @@
 # TODO
 
-* Lookup info about the user spaced on their space ID
+* Lookup info about the user based on their space ID
 * Document API in README
  * Data to include in POST
  * Environment variable data used to collect this information
