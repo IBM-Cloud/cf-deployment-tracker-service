@@ -1,7 +1,6 @@
 # TODO
 
 * Lookup info about the user spaced on their space ID
-* Add a time-based component to the metrics
 * Document API in README
  * Data to include in POST
  * Environment variable data used to collect this information
