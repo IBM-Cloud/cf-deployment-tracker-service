@@ -1,6 +1,7 @@
 # TODO
 
 * Lookup info about the user based on their space ID
+* Create service that pushes this data, combined with Bluemix data, to Google Analytics
 * Document API in README
  * Data to include in POST
  * Environment variable data used to collect this information
