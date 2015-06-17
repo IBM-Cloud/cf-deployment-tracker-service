@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "./admin.js db put && ./admin.js ddoc put",
-    "install": "./admin.js track"
+    "install": "./admin.js track",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
