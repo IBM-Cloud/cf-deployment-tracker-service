@@ -6,7 +6,7 @@ The Deployment Tracker tracks deployments of sample applications to [IBM Bluemix
 
 Get the project and change into the project directory:
 
-    $ git clone https://github.com/cloudant-labs/deployment-tracker.git
+    $ git clone https://github.com/IBM-Bluemix/cf-deployment-tracker-service.git
     $ cd deployment-tracker
 
 ## Configuring Local Development
