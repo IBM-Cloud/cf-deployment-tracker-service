@@ -9,8 +9,10 @@
 * Track deployments to other non-Bluemix platforms
 * Continuous integration
 * Zero-downtime deployments
-* Tracking npm package
-* SSL tracking (client side)
+* Move server to Dev-Advocates org
+* ~~Tracking npm package~~ (complete)
+* Java library
+* ~~SSL tracking (client side)~~ (complete)
 * Interactive opt-out (if possible)
 * Privacy and opt-out bolier plate
 * Governance (product lifecycle, etc.)
