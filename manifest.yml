@@ -6,6 +6,6 @@ declared-services:
 applications:
 - name: deployment-tracker
   memory: 128M
-  host: deployment-tracker
+  random-route: true
   services:
   - deployment-tracker-db
