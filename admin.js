@@ -49,7 +49,7 @@ program
           if (!err) {
             console.log('Deployment tracker events database created');
           } else {
-            if (412 == err.status_code) {
+            if (412 == err.statusCode) {
               console.log('Deployment tracker events database already exists');
             } else {
               console.error('Error creating deployment tracker events database');
@@ -62,7 +62,7 @@ program
           if (!err) {
             console.log('Deployment tracker events database deleted');
           } else {
-            if (404 == err.status_code) {
+            if (404 == err.statusCode) {
               console.log('Deployment tracker events database does not exist');
             } else {
               console.error('Error deleting deployment tracker events database');
@@ -105,7 +105,7 @@ program
           if (!err) {
             console.log('Design document created');
           } else {
-            if (409 == err.status_code) {
+            if (409 == err.statusCode) {
               console.log('Design document already exists');
             } else {
               console.error('Error creating design document database');
@@ -120,7 +120,7 @@ program
               if (!err) {
                 console.log('Design document deleted');
               } else {
-                if (404 == err.status_code) {
+                if (404 == err.statusCode) {
                   console.log('Design document does not exist');
                 } else {
                   console.error('Error deleting design document');
@@ -128,7 +128,7 @@ program
               }
             });
           } else {
-            if (404 == err.status_code) {
+            if (404 == err.statusCode) {
               console.log('Design document does not exist');
             } else {
               console.error('Error getting design document');
