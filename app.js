@@ -38,11 +38,19 @@ app.get('/', function(req, res) {
     return res.status(500);
   }
   var eventsDb = deploymentTrackerDb.use('events');
-  eventsDb.view('deployments', 'apps', {group_level: 1}, function(err, body) {
-    var apps = [];
+  eventsDb.view('deployments', 'apps_by_year_and_month', {group_level: 3}, function(err, body) {
+    var apps = {};
     body.rows.map(function(row) {
-      apps.push({
-        name: row.key[0],
+      var year = row.key[0];
+      var month = row.key[1];
+      if (!(year in apps)) {
+        apps[year] = {};
+      }
+      if (!(month in apps[year])) {
+        apps[year][month] = [];
+      }
+      apps[year][month].push({
+        url: row.key[2],
         count: row.value
       });
     });
