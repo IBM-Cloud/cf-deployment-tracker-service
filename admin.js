@@ -96,6 +96,10 @@ program
         var ddoc = {
           _id: '_design/deployments',
           views: {
+            by_repo: {
+              map: 'function(doc) { emit([doc.repository_url, doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }',
+              reduce: '_count',
+            },
             apps_by_year_and_month: {
               map: 'function(doc) { emit([doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.repository_url, doc.space_id, doc.application_version]); }',
               reduce: '_count',
