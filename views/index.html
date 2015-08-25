@@ -20,24 +20,20 @@
       </div>
     </div>
     <article class="container">
-      <h1>Application Deployments by Year and Month</h1>
+      <h1>Application Deployments by Repository</h1>
 {{#each apps}}
       <section>
-        <h2>{{@key}}</h2>
+        <h2>{{#if @key}}{{@key}}{{else}}<em>no repository URL</em>{{/if}}</h2>
+        <ul class="list-group">
 {{#each this}}
-        <section>
-          <h3>{{@../key}}-{{@key}}</h3>
-          <ul class="list-group">
 {{#each this}}
-            <li class="list-group-item">
-              <span class="badge">{{this.count}}</span>
-              {{this.url}}
-              {{#unless this.url}}<em>no repository URL</em>{{/unless}}
-            </li>
+          <li class="list-group-item">
+            <span class="badge">{{this}}</span>
+            {{@../key}}-{{@key}}
+          </li>
 {{/each}}
-          </ul>
-        </section>
 {{/each}}
+        </ul>
       </section>
 {{/each}}
     </article>
