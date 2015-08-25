@@ -46,7 +46,9 @@ app.get('/', function(req, res) {
       var year = row.key[1];
       var month = row.key[2];
       if (!(url in apps)) {
-        apps[url] = {};
+        apps[url] = {
+          count: 0
+        };
       }
       if (validator.isURL(url, {protocols: ['http','https'], require_protocol: true})) {
         apps[url].is_url = true;
@@ -56,6 +58,7 @@ app.get('/', function(req, res) {
       }
       if (!(month in apps[url][year])) {
         apps[url][year][month] = row.value;
+        apps[url].count += row.value;
       }
     });
     res.render('index', {apps: apps});
