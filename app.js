@@ -6,6 +6,7 @@ var express = require('express'),
     cloudant = require('cloudant'),
     program = require('commander'),
     dotenv = require('dotenv'),
+    validator = require('validator'),
     bodyParser = require('body-parser');
 dotenv.load();
 
@@ -46,6 +47,9 @@ app.get('/', function(req, res) {
       var month = row.key[2];
       if (!(url in apps)) {
         apps[url] = {};
+      }
+      if (validator.isURL(url, {protocols: ['http','https'], require_protocol: true})) {
+        apps[url].is_url = true;
       }
       if (!(year in apps[url])) {
         apps[url][year] = {};

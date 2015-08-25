@@ -29,6 +29,7 @@
     "dotenv": "^1.1.0",
     "express": "^4.12.3",
     "hbs": "^3.0.1",
-    "http-post": "^0.1.1"
+    "http-post": "^0.1.1",
+    "validator": "^4.0.5"
   }
 }
