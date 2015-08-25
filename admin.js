@@ -7,6 +7,7 @@ var express = require('express'),
     cloudant = require('cloudant'),
     program = require('commander'),
     dotenv = require('dotenv'),
+    crypto = require('crypto'),
     pkg = require(path.join(__dirname, 'package.json'));
 
 http.post = require('http-post');
@@ -109,7 +110,24 @@ program
             console.log('Design document created');
           } else {
             if (409 == err.statusCode) {
-              console.log('Design document already exists');
+              eventsDb.get(ddoc._id, function(err, body) {
+                var rev = body._rev;
+                delete body._rev;
+                ddocHash = crypto.createHash('md5').update(JSON.stringify(ddoc)).digest('hex');
+                bodyHash = crypto.createHash('md5').update(JSON.stringify(body)).digest('hex');
+                if (ddocHash != bodyHash) {
+                  ddoc._rev = rev;
+                  eventsDb.insert(ddoc, function(err, body) {
+                    if (!err) {
+                      console.log('Design document updated');
+                    } else {
+                      console.error('Error updating design document database');
+                    }
+                  });
+                } else {
+                  console.log('Design document already exists and does not need updating');
+                }
+              });
             } else {
               console.error('Error creating design document database');
             }
