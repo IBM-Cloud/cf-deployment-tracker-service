@@ -2,6 +2,8 @@
 
 The Deployment Tracker tracks deployments of sample applications to [IBM Bluemix](https://www.bluemix.net/).
 
+[**_View a summary of deployments tracked._**](https://deployment-tracker.mybluemix.net/)
+
 ## Cloning
 
 Get the project and change into the project directory:
