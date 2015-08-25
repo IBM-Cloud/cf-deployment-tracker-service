@@ -47,6 +47,7 @@ app.get('/', function(req, res) {
       var month = row.key[2];
       if (!(url in apps)) {
         apps[url] = {
+          url: url,
           count: 0
         };
       }
@@ -61,7 +62,20 @@ app.get('/', function(req, res) {
         apps[url].count += row.value;
       }
     });
-    res.render('index', {apps: apps});
+    appsSortedByCount = [];
+    for (var url in apps) {
+      appsSortedByCount.push(apps[url]);
+    }
+    appsSortedByCount.sort(function(a, b) {
+      if (a.count < b.count) {
+        return -1;
+      }
+      if (a.count > b.count) {
+        return 1;
+      }
+      return 0;
+    }).reverse();
+    res.render('index', {apps: appsSortedByCount});
   });
 });
 

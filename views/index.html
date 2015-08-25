@@ -23,7 +23,7 @@
       <h1>Application Deployments by Repository</h1>
 {{#each apps}}
       <section>
-        <h2>{{#if @key}}{{@key}}{{else}}<em>no repository URL</em>{{/if}}{{#if is_url}} <a href="{{@key}}" target="_blank" class="glyphicon glyphicon-link" aria-hidden="true"></a>{{/if}} <span class="badge">{{count}}</span></h2>
+        <h2>{{#if url}}{{url}}{{else}}<em>No repository URL</em>{{/if}}{{#if is_url}} <a href="{{url}}" target="_blank" class="glyphicon glyphicon-link" aria-hidden="true"></a>{{/if}} <span class="badge">{{count}}</span></h2>
         <ul class="list-group">
 {{#each this}}
 {{#each this}}
