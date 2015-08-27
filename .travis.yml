@@ -5,7 +5,8 @@ deploy:
   edge: true
   provider: cloudfoundry
   api: https://api.ng.bluemix.net
-  username: jbsloyer@us.ibm.com
+  username:
+    secure: Hlvk+M20jyEk6zrdKPKFTcxaRfAKngY5RXSQ9GpZ+ItqZn6CUnJE9XG7ZXYOadp12AKoUrMFe2iqN52yR2cHBz43DR2809D3qFqIbElVdgNB8WSdGVUT3ZVavDuwd8I+esg36tiBrBj1kPTepqCkWYwXANfsUJFPJI3s/5y62gU=
   manifest: manifest.yml
   password:
     secure: Jw3X7Ccq20vg67aIUMV7W39FD+Ph78/acGn/eQxXsoCDezi0MT9pOtTdDcwFnEn4w9IYi6vEELHBqWr3hDhrtdoA3RjNFUZ3qpnclwliWnUQYPu9Vkq2xaDGibElJEyZ19iz1Jiv3yoLAYHZkUM4AGoREtpz5dw+Mtnwj8q/iXU=
