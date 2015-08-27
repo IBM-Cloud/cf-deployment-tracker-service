@@ -2,6 +2,7 @@ language: node_js
 node_js:
 - '0.12'
 deploy:
+  edge: true
   provider: cloudfoundry
   api: https://api.ng.bluemix.net
   username: jbsloyer@us.ibm.com
