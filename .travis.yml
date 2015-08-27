@@ -11,4 +11,5 @@ deploy:
   organization: Dev-Advocates
   space: metrics
   on:
+    branch: master
     repo: IBM-Bluemix/cf-deployment-tracker-service
