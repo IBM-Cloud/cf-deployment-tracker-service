@@ -6,6 +6,7 @@ deploy:
   provider: cloudfoundry
   api: https://api.ng.bluemix.net
   username: jbsloyer@us.ibm.com
+  manifest: manifest.yml
   password:
     secure: Jw3X7Ccq20vg67aIUMV7W39FD+Ph78/acGn/eQxXsoCDezi0MT9pOtTdDcwFnEn4w9IYi6vEELHBqWr3hDhrtdoA3RjNFUZ3qpnclwliWnUQYPu9Vkq2xaDGibElJEyZ19iz1Jiv3yoLAYHZkUM4AGoREtpz5dw+Mtnwj8q/iXU=
   organization: Dev-Advocates
