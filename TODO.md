@@ -6,6 +6,7 @@
  * Data to include in POST
  * Environment variable data used to collect this information
 * Unit tests
+* Linting
 * Track deployments to other non-Bluemix platforms
 * Continuous integration
 * Zero-downtime deployments
