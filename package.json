@@ -11,18 +11,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cloudant-labs/deployment-tracker.git"
+    "url": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service.git"
   },
   "keywords": [
     "Cloudant",
-    "Bluemix"
+    "Bluemix",
+    "IBM"
   ],
   "author": "Bradley Holt <bradley.holt@us.ibm.com> (https://cloudant.com/)",
+  "contributors": [
+    {
+      "name": "Jeff Sloyer",
+      "email": "jbsloyer@us.ibm.com"
+    }
+  ],
   "license": "Apache 2.0",
   "bugs": {
-    "url": "https://github.com/cloudant-labs/deployment-tracker/issues"
+    "url": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service/issues"
   },
-  "homepage": "https://github.com/cloudant-labs/deployment-tracker",
+  "homepage": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service",
   "dependencies": {
     "body-parser": "^1.12.3",
     "cloudant": "^1.0.0-beta3",
@@ -31,6 +38,15 @@
     "express": "^4.12.3",
     "hbs": "^3.0.1",
     "http-post": "^0.1.1",
-    "validator": "^4.0.5"
+    "validator": "^4.0.5",
+    "cookie-parser": "*",
+    "passport": "0.2.2",
+    "express-session": "*",
+    "cfenv": "*",
+    "passport-oauth": "1.0.0",
+    "passport-ibmid-oauth2": "*",
+    "underscore": "*",
+    "node-uuid": "*",
+    "express-force-ssl": "*"
   }
 }

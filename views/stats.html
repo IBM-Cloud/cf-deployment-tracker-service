@@ -15,17 +15,28 @@
   <body>
     <div class="jumbotron">
       <div class="container">
-        <h1>IBM Bluemix Deployment Tracker</h1>
+        <h1>Deployment Tracker</h1>
         <p>Deployments of sample applications to <a href="https://www.bluemix.net/">IBM Bluemix</a></p>
         <p><a class="btn btn-primary btn-lg" href="https://github.com/IBM-Bluemix/cf-deployment-tracker-service" target="_blank" role="button">View the source code on GitHub <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></p>
       </div>
     </div>
-    </article>
     <article class="container">
-      <p>
-        <a class="btn btn-primary btn-lg" href="/auth/ibmid" target="_blank" role="button">Login to see the stats <span class="glyphicon glyphicon-lock" aria-hidden="true"></span></a>
-      </p>
-      <h3>Note: You must be an IBM'er to see them</h3>
+      <h1>Application Deployments by Repository</h1>
+{{#each apps}}
+      <section>
+        <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank" aria-hidden="true">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}} <span class="badge">{{count}}</span></h2>
+        <ul class="list-group">
+{{#each this}}
+{{#each this}}
+          <li class="list-group-item">
+            <span class="badge">{{this}}</span>
+            {{@../key}}-{{@key}}
+          </li>
+{{/each}}
+{{/each}}
+        </ul>
+      </section>
+{{/each}}
     </article>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>

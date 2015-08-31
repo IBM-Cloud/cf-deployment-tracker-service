@@ -7,10 +7,72 @@ var express = require('express'),
     program = require('commander'),
     dotenv = require('dotenv'),
     validator = require('validator'),
-    bodyParser = require('body-parser');
+    bodyParser = require('body-parser'),
+    passport = require('passport'),
+    cfenv = require('cfenv'),
+    cookieParser = require('cookie-parser'),
+    IbmIdStrategy = require('passport-ibmid-oauth2').Strategy,
+    expressSession = require('express-session'),
+    sessionStore = new expressSession.MemoryStore,
+    _ = require("underscore"),
+    uuid = require('node-uuid'),
+    forceSSL = require('express-force-ssl');
+
+
 dotenv.load();
 
+var appEnv = cfenv.getAppEnv();
+
 var app = express();
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+
+//in future PR switch to redis or cloudant as a session store
+app.use(expressSession({ secret: uuid.v4(), store: sessionStore}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(forceSSL)
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+var SSO_CLIENT_ID = (process.env.SSO_CLIENT_ID || ' ');
+var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || ' ');
+
+passport.use('ibmid', new IbmIdStrategy({
+    clientID: SSO_CLIENT_ID,
+    clientSecret: SSO_CLIENT_SECRET,
+    callbackURL: appEnv.url + '/auth/ibmid/callback',
+    passReqToCallback: true
+  }, function(req, accessToken, refreshToken, profile, done) {
+    req.session.ibmid = {};
+    req.session.ibmid.profile = profile;
+    done(null, profile);
+    return;
+  }
+));
+
+app.get('/auth/ibmid', passport.authenticate('ibmid', { scope: ['profile'] }), function (request, response) {
+    request = request;
+    response = response;
+});
+
+app.get('/auth/ibmid/callback', passport.authenticate('ibmid', { failureRedirect: '/error', scope: ['profile'] }), function(req, res) {
+  res.redirect('/stats');
+});
+
+app.get("/logout", function (request, response) {
+    passport._strategy('ibmid').logout(request, response, appEnv.url);
+});
 
 (function(app) {
   if (process.env.VCAP_SERVICES) {
@@ -31,8 +93,15 @@ var app = express();
 
 var urlEncodedParser = bodyParser.urlencoded(),
   jsonParser = bodyParser.json();
-// Get metrics overview
+
+
+
 app.get('/', function(req, res) {
+    res.render('index');
+});
+
+// Get metrics overview
+app.get('/stats', authenticate(), function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get('deployment-tracker-db');
   if (!deploymentTrackerDb) {
@@ -75,7 +144,7 @@ app.get('/', function(req, res) {
       }
       return 0;
     }).reverse();
-    res.render('index', {apps: appsSortedByCount});
+    res.render('stats', {apps: appsSortedByCount});
   });
 });
 
@@ -169,19 +238,59 @@ app.post('/api/v1/track', jsonParser, function(req, res) {
   });
 });
 
+app.get("/api/v1/whoami", authenticate(), function (request, response) {
+    response.send(request.session.ibmid);
+});
 
-// Set the port number based on a command line switch, an environment variable, or a default value
-app.set('port', program.port || process.env.PORT || 3000);
+app.get('/error', function (request, response) {
+    //need to add pretty error page in future PR
+    response.send('Failed to authenticate');
+});
+
+function authenticate() {
+    return function(request, response, next) {;
+        if (!request.isAuthenticated() || request.session.ibmid == undefined) {
+            response.redirect('/auth/ibmid');
+        }
+
+        var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
+        if (request.isAuthenticated() && verifiedEmail.length < 1) {
+            //send to a nice pretty page in a future PR
+            response.send("You must have a verified email to use this app");
+            next();
+        }
+        else {
+            var ibmer = false;
+            _.each(verifiedEmail, function (email) {
+                if (email.indexOf("ibm.com") !== -1) {
+                    ibmer = true;
+                }
+            });
+            if (ibmer === false) {
+                //send to a nice pretty page in a future PR
+                response.send("You must be an IBM'er to use this app");
+            }
+            next();
+        }
+    }
+}
+
+//prevent this page getting indexed
+app.get("/robots.txt", function (request, response) {
+    response.send("User-agent: *\nDisallow: /")
+});
+
 // Set the view engine
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
+
 // Serve static assets
 app.use(express.static(path.join(__dirname, 'public')));
-// Create the HTTP server
-http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
 
+// Create the HTTP server
+http.createServer(app).listen(appEnv.port, appEnv.bind, function(){
+    console.log("server starting on " + appEnv.url);
+});
 //-------------------------------------------------------------------------------
 // Copyright IBM Corp. 2015
 //
