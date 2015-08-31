@@ -3,7 +3,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         jshint: {
             options : {
-
+                jshintrc: ".jshintrc",
                 ignores : [ "node_modules/**/*.js" ]
             },
             src: ["Gruntfile.js", "app.js", "admin.js"],
