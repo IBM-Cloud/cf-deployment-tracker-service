@@ -9,7 +9,7 @@
 * Track deployments to other non-Bluemix platforms
 * Continuous integration
 * Zero-downtime deployments
-* Move server to Dev-Advocates org
+* ~~Move server to Dev-Advocates org~~ (complete)
 * ~~Tracking npm package~~ (complete)
 * Java library
 * ~~SSL tracking (client side)~~ (complete)
