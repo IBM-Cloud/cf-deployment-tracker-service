@@ -30,7 +30,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 //in future PR switch to redis or cloudant as a session store
-app.use(expressSession({ secret: uuid.v4(), store: sessionStore}));
+app.use(expressSession({ secret: uuid.v4(),
+    store: sessionStore,
+    //needs to be revaled when a session store is added
+    //https://github.com/expressjs/session#resave
+    resave: true,
+    saveUninitialized: false
+    //https://github.com/expressjs/session#saveuninitialized
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,7 +98,7 @@ app.get("/logout", function (request, response) {
   }
 })(app);
 
-var urlEncodedParser = bodyParser.urlencoded(),
+var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
   jsonParser = bodyParser.json();
 
 
@@ -251,6 +258,7 @@ function authenticate() {
     return function(request, response, next) {;
         if (!request.isAuthenticated() || request.session.ibmid == undefined) {
             response.redirect('/auth/ibmid');
+            return next();
         }
 
         var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
