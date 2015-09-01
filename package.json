@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "./admin.js track && ./admin.js db put && ./admin.js ddoc put",
     "start": "node app.js",
-    "test": "echo no tests yet"
+    "test": "grunt"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,10 @@
       "email": "jbsloyer@us.ibm.com"
     }
   ],
-  "license": "Apache 2.0",
+  "license": {
+    "type": "Apache-2.0",
+    "url": "http://opensource.org/licenses/apache2.0.php"
+  },
   "bugs": {
     "url": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service/issues"
   },
@@ -38,6 +41,7 @@
     "express": "^4.12.3",
     "hbs": "^3.0.1",
     "http-post": "^0.1.1",
+<<<<<<< HEAD
     "validator": "^4.0.5",
     "cookie-parser": "*",
     "passport": "0.2.2",
@@ -48,5 +52,14 @@
     "underscore": "*",
     "node-uuid": "*",
     "express-force-ssl": "*"
+=======
+    "validator": "^4.0.5"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-cli": "~0.1.13",
+    "grunt-contrib-jshint": "~0.6.4",
+    "jshint": "git+https://github.com/Druotic/jshint.git"
+>>>>>>> master
   }
 }
