@@ -42,7 +42,7 @@ app.get('/', function(req, res) {
   eventsDb.view('deployments', 'by_repo', {group_level: 3}, function(err, body) {
     var apps = {};
     body.rows.map(function(row) {
-      var url = row.key[0]
+      var url = row.key[0];
       var year = row.key[1];
       var month = row.key[2];
       if (!(url in apps)) {
