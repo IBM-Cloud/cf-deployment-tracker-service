@@ -261,8 +261,17 @@ function authenticate() {
             return next();
         }
 
+        console.log(request.session.ibmid);
         var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
-        if (request.isAuthenticated() && verifiedEmail.length < 1) {
+        if (request.isAuthenticated() && verifiedEmail === undefined) {
+          //send to a nice pretty page in a future PR
+          response.send("You must have a verified email to use this app. " +
+            "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
+            "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
+            " to login again to pick up you verified email");
+          next();
+        }
+        else if (request.isAuthenticated() && verifiedEmail.length < 1) {
             //send to a nice pretty page in a future PR
             response.send("You must have a verified email to use this app");
             next();
