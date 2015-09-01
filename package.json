@@ -50,7 +50,7 @@
     "passport-ibmid-oauth2": "*",
     "underscore": "*",
     "node-uuid": "*",
-    "express-force-ssl": "*"
+    "express-force-ssl": "*",
     "validator": "^4.0.5"
   },
   "devDependencies": {
