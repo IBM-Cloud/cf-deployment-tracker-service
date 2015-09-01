@@ -13,7 +13,7 @@ var express = require('express'),
     cookieParser = require('cookie-parser'),
     IbmIdStrategy = require('passport-ibmid-oauth2').Strategy,
     expressSession = require('express-session'),
-    sessionStore = new expressSession.MemoryStore,
+    sessionStore = new expressSession.MemoryStore(),
     _ = require("underscore"),
     uuid = require('node-uuid'),
     forceSSL = require('express-force-ssl');
@@ -42,7 +42,7 @@ app.use(expressSession({ secret: uuid.v4(),
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(forceSSL)
+app.use(forceSSL);
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -255,8 +255,8 @@ app.get('/error', function (request, response) {
 });
 
 function authenticate() {
-    return function(request, response, next) {;
-        if (!request.isAuthenticated() || request.session.ibmid == undefined) {
+    return function(request, response, next) {
+        if (!request.isAuthenticated() || request.session.ibmid === undefined) {
             response.redirect('/auth/ibmid');
             return next();
         }
@@ -280,12 +280,12 @@ function authenticate() {
             }
             next();
         }
-    }
+    };
 }
 
 //prevent this page getting indexed
 app.get("/robots.txt", function (request, response) {
-    response.send("User-agent: *\nDisallow: /")
+    response.send("User-agent: *\nDisallow: /");
 });
 
 // Set the view engine
