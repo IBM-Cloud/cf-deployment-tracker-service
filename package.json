@@ -41,7 +41,6 @@
     "express": "^4.12.3",
     "hbs": "^3.0.1",
     "http-post": "^0.1.1",
-<<<<<<< HEAD
     "validator": "^4.0.5",
     "cookie-parser": "*",
     "passport": "0.2.2",
@@ -52,7 +51,6 @@
     "underscore": "*",
     "node-uuid": "*",
     "express-force-ssl": "*"
-=======
     "validator": "^4.0.5"
   },
   "devDependencies": {
@@ -60,6 +58,5 @@
     "grunt-cli": "~0.1.13",
     "grunt-contrib-jshint": "~0.6.4",
     "jshint": "git+https://github.com/Druotic/jshint.git"
->>>>>>> master
   }
 }
