@@ -250,8 +250,7 @@ app.get("/api/v1/whoami", authenticate(), function (request, response) {
 });
 
 app.get('/error', function (request, response) {
-    //need to add pretty error page in future PR
-    response.send('Failed to authenticate');
+    response.render('error', {message: "Failed to authenticate"});
 });
 
 function authenticate() {
@@ -263,9 +262,7 @@ function authenticate() {
 
         var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
         if (request.isAuthenticated() && verifiedEmail.length < 1) {
-            //send to a nice pretty page in a future PR
-            response.send("You must have a verified email to use this app");
-            next();
+            response.render('error', {message: "You must have a verified email to use this app"});
         }
         else {
             var ibmer = false;
@@ -275,8 +272,7 @@ function authenticate() {
                 }
             });
             if (ibmer === false) {
-                //send to a nice pretty page in a future PR
-                response.send("You must be an IBM'er to use this app");
+              response.render('error', {message: "You must be an IBM'er to use this app"});
             }
             next();
         }
