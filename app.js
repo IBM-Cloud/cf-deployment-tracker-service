@@ -250,31 +250,25 @@ app.get("/api/v1/whoami", authenticate(), function (request, response) {
 });
 
 app.get('/error', function (request, response) {
-    //need to add pretty error page in future PR
-    response.send('Failed to authenticate');
+    response.render('error', {message: "Failed to authenticate"});
 });
 
 function authenticate() {
     return function(request, response, next) {
         if (!request.isAuthenticated() || request.session.ibmid === undefined) {
             response.redirect('/auth/ibmid');
-            return next();
+            return;
         }
 
         console.log(request.session.ibmid);
         var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
-        if (request.isAuthenticated() && verifiedEmail === undefined) {
-          //send to a nice pretty page in a future PR
-          response.send("You must have a verified email to use this app. " +
+
+        if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
+          response.render('error', {message: "You must have a verified email to use this app. " +
             "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
             "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
-            " to login again to pick up you verified email");
-          next();
-        }
-        else if (request.isAuthenticated() && verifiedEmail.length < 1) {
-            //send to a nice pretty page in a future PR
-            response.send("You must have a verified email to use this app");
-            next();
+            " to login again to pick up you verified email"});
+          return;
         }
         else {
             var ibmer = false;
@@ -284,10 +278,9 @@ function authenticate() {
                 }
             });
             if (ibmer === false) {
-                //send to a nice pretty page in a future PR
-                response.send("You must be an IBM'er to use this app");
+              response.render('error', {message: "You must be an IBM'er to use this app"});
             }
-            next();
+            return;
         }
     };
 }
