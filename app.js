@@ -261,7 +261,6 @@ function authenticate() {
         }
 
         console.log(request.session.ibmid);
-
         var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
 
         if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
