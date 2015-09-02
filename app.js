@@ -279,7 +279,7 @@ function authenticate() {
         else {
             var ibmer = false;
             _.each(verifiedEmail, function (email) {
-                if (email.indexOf("ibm.com") !== -1) {
+                if (email.toLowerCase().indexOf("ibm.com") !== -1) {
                     ibmer = true;
                 }
             });
