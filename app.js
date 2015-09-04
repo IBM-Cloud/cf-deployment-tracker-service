@@ -257,7 +257,7 @@ function authenticate() {
     return function(request, response, next) {
         if (!request.isAuthenticated() || request.session.ibmid === undefined) {
             response.redirect('/auth/ibmid');
-            return;
+            return next();
         }
 
         console.log(request.session.ibmid);
@@ -268,7 +268,7 @@ function authenticate() {
             "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
             "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
             " to login again to pick up you verified email"});
-          return;
+          return next();
         }
         else {
             var ibmer = false;
@@ -280,7 +280,7 @@ function authenticate() {
             if (ibmer === false) {
               response.render('error', {message: "You must be an IBM'er to use this app"});
             }
-            return;
+            return next();
         }
     };
 }
