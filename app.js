@@ -127,6 +127,9 @@ app.get('/stats', authenticate(), function(req, res) {
           url: url,
           count: 0
         };
+        if (url) {
+          apps[url].url_hash = crypto.createHash('md5').update(url).digest('hex');
+        }
       }
       if (validator.isURL(url, {protocols: ['http','https'], require_protocol: true})) {
         apps[url].is_url = true;

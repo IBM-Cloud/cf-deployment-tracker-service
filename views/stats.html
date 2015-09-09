@@ -24,7 +24,7 @@
       <h1>Application Deployments by Repository</h1>
 {{#each apps}}
       <section>
-        <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank" aria-hidden="true">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}} <span class="badge">{{count}}</span></h2>
+        <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}}{{#if url_hash}} <a href="/stats/{{url_hash}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>{{/if}} <span class="badge">{{count}}</span></h2>
         <ul class="list-group">
 {{#each this}}
 {{#each this}}
