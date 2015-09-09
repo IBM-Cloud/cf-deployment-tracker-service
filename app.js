@@ -16,7 +16,8 @@ var express = require('express'),
     sessionStore = new expressSession.MemoryStore(),
     _ = require("underscore"),
     uuid = require('node-uuid'),
-    forceSSL = require('express-force-ssl');
+    forceSSL = require('express-force-ssl'),
+    crypto = require('crypto');
 
 
 dotenv.load();
@@ -179,6 +180,7 @@ function track(req, res) {
   }
   if (req.body.repository_url) {
     event.repository_url = req.body.repository_url;
+    event.repository_url_hash = crypto.createHash('md5').update(event.repository_url).digest('hex');
   }
   if (req.body.application_name) {
     event.application_name = req.body.application_name;
