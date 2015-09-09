@@ -156,6 +156,59 @@ app.get('/stats', authenticate(), function(req, res) {
   });
 });
 
+// Get metrics for a specific repo
+app.get('/stats/:hash', authenticate(), function(req, res) {
+  var app = req.app;
+  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use('events');
+  var hash = req.param('hash');
+  eventsDb.view('deployments', 'by_repo_hash', {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
+    var apps = {};
+    body.rows.map(function(row) {
+      var hash = row.key[0]
+      var url = row.key[1];
+      var year = row.key[2];
+      var month = row.key[3];
+      if (!(url in apps)) {
+        apps[url] = {
+          url: url,
+          count: 0
+        };
+        if (hash) {
+          apps[url].url_hash = hash;
+        }
+      }
+      if (validator.isURL(url, {protocols: ['http','https'], require_protocol: true})) {
+        apps[url].is_url = true;
+      }
+      if (!(year in apps[url])) {
+        apps[url][year] = {};
+      }
+      if (!(month in apps[url][year])) {
+        apps[url][year][month] = row.value;
+        apps[url].count += row.value;
+      }
+    });
+    appsSortedByCount = [];
+    for (var url in apps) {
+      appsSortedByCount.push(apps[url]);
+    }
+    appsSortedByCount.sort(function(a, b) {
+      if (a.count < b.count) {
+        return -1;
+      }
+      if (a.count > b.count) {
+        return 1;
+      }
+      return 0;
+    }).reverse();
+    res.render('repo', {apps: appsSortedByCount});
+  });
+});
+
 app.post('/', urlEncodedParser, track);
 
 app.post('/api/v1/track', jsonParser, track);
