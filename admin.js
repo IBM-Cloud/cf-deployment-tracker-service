@@ -175,6 +175,44 @@ program
   });
 
 program
+  .command('clean <task>')
+  .description('Run a data cleanup task')
+  .action(function(task, options) {
+    var deploymentTrackerDb = app.get('deployment-tracker-db');
+    if (!deploymentTrackerDb) {
+      console.error('No database configured');
+      return;
+    }
+    switch (task) {
+      case 'repository_url_hash':
+        var eventsDb = deploymentTrackerDb.use('events');
+        eventsDb.view('deployments', 'by_repo_hash', {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}], reduce: false, include_docs: true}, function(err, body) {
+          console.log(body.rows.length + ' documents without repository URL hashes');
+          console.log('Adding repository URL hashes...');
+          var updatedDocs = 0;
+          var updatedDocErrors = 0;
+          body.rows.map(function(row) {
+            var event = row.doc;
+            if (event.repository_url_hash) {
+              console.error('Document should not have a repository_url_hash');
+              return;
+            }
+            if (event.repository_url) {
+              event.repository_url_hash = crypto.createHash('md5').update(event.repository_url).digest('hex');
+              eventsDb.insert(event);
+            }
+          });
+        });
+        break;
+    }
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ clean repository_url_hash');
+    console.log();
+  });
+
+program
   .command('track')
   .description('Track application deployments')
   .action(function(options) {
