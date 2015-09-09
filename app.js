@@ -155,52 +155,11 @@ app.get('/stats', authenticate(), function(req, res) {
   });
 });
 
-app.post('/', urlEncodedParser, function(req, res) {
-  var app = req.app;
-  var deploymentTrackerDb = app.get('deployment-tracker-db');
-  if (!deploymentTrackerDb) {
-    return res.status(500).json({ error: 'No database server configured' });
-  }
-  if (!req.body) {
-    return res.sendStatus(400);
-  }
-  var event = {
-    date_received: new Date().toJSON()
-  };
-  if (req.body.date_sent) {
-    event.date_sent = req.body.date_sent;
-  }
-  if (req.body.code_version) {
-    event.code_version = req.body.code_version;
-  }
-  if (req.body.repository_url) {
-    event.repository_url = req.body.repository_url;
-  }
-  if (req.body.application_name) {
-    event.application_name = req.body.application_name;
-  }
-  if (req.body.space_id) {
-    event.space_id = req.body.space_id;
-  }
-  if (req.body.application_version) {
-    event.application_version = req.body.application_version;
-  }
-  if (req.body.application_uris) {
-    event.application_uris = req.body.application_uris;
-  }
-  var eventsDb = deploymentTrackerDb.use('events');
-  eventsDb.insert(event, function(err, body) {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({error: 'Internal Server Error'});
-    }
-    return res.status(201).json({
-      ok: true
-    });
-  });
-});
+app.post('/', urlEncodedParser, track);
 
-app.post('/api/v1/track', jsonParser, function(req, res) {
+app.post('/api/v1/track', jsonParser, track);
+
+function track(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get('deployment-tracker-db');
   if (!deploymentTrackerDb) {
@@ -243,7 +202,7 @@ app.post('/api/v1/track', jsonParser, function(req, res) {
       ok: true
     });
   });
-});
+}
 
 app.get("/api/v1/whoami", authenticate(), function (request, response) {
     response.send(request.session.ibmid);
