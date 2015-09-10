@@ -16,7 +16,6 @@ var express = require('express'),
     sessionStore = new expressSession.MemoryStore(),
     _ = require("underscore"),
     uuid = require('node-uuid'),
-    forceSSL = require('express-force-ssl'),
     crypto = require('crypto');
 
 
@@ -43,7 +42,9 @@ app.use(expressSession({ secret: uuid.v4(),
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(forceSSL);
+if (!appEnv.isLocal) {
+  app.use(require('express-force-ssl'));
+}
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -272,6 +273,9 @@ app.get('/error', function (request, response) {
 
 function authenticate() {
     return function(request, response, next) {
+        if (appEnv.isLocal) {
+          return next();
+        }
         if (!request.isAuthenticated() || request.session.ibmid === undefined) {
             response.redirect('/auth/ibmid');
             return next();
