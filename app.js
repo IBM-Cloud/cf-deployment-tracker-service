@@ -171,7 +171,7 @@ app.get('/stats/:hash', authenticate(), function(req, res) {
   eventsDb.view('deployments', 'by_repo_hash', {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
     var apps = {};
     body.rows.map(function(row) {
-      var hash = row.key[0]
+      var hash = row.key[0];
       var url = row.key[1];
       var year = row.key[2];
       var month = row.key[3];
