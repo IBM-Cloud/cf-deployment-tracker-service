@@ -4,7 +4,6 @@
   "description": "Tracks deployments of sample applications",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "./admin.js track && ./admin.js db put && ./admin.js ddoc put",
     "start": "node app.js",
     "test": "grunt"
