@@ -4,7 +4,6 @@
   "description": "Tracks deployments of sample applications",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "./admin.js track && ./admin.js db put && ./admin.js ddoc put && ./admin.js clean repository_url_hash",
     "start": "node app.js",
     "test": "grunt"
@@ -25,32 +24,29 @@
       "email": "jbsloyer@us.ibm.com"
     }
   ],
-  "license": {
-    "type": "Apache-2.0",
-    "url": "http://opensource.org/licenses/apache2.0.php"
-  },
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service/issues"
   },
   "homepage": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service",
   "dependencies": {
     "body-parser": "^1.12.3",
+    "cfenv": "*",
     "cloudant": "^1.0.0-beta3",
     "commander": "^2.8.1",
+    "cookie-parser": "*",
     "dotenv": "^1.1.0",
     "express": "^4.12.3",
+    "express-csv": "^0.6.0",
+    "express-force-ssl": "*",
+    "express-session": "*",
     "hbs": "^3.0.1",
     "http-post": "^0.1.1",
-    "validator": "^4.0.5",
-    "cookie-parser": "*",
-    "passport": "0.2.2",
-    "express-session": "*",
-    "cfenv": "*",
-    "passport-oauth": "1.0.0",
-    "passport-ibmid-oauth2": "*",
-    "underscore": "*",
     "node-uuid": "*",
-    "express-force-ssl": "*",
+    "passport": "0.2.2",
+    "passport-ibmid-oauth2": "*",
+    "passport-oauth": "1.0.0",
+    "underscore": "*",
     "validator": "^4.0.5"
   },
   "devDependencies": {

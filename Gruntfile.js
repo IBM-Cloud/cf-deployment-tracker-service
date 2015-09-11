@@ -6,7 +6,7 @@ module.exports = function (grunt) {
 
                 ignores : [ "node_modules/**/*.js" ]
             },
-            src: ["Gruntfile.js", "app.js"],
+            src: ["Gruntfile.js", "app.js", "admin.js"],
         }
     });
 

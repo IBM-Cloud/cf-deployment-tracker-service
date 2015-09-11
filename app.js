@@ -16,7 +16,8 @@ var express = require('express'),
     sessionStore = new expressSession.MemoryStore(),
     _ = require("underscore"),
     uuid = require('node-uuid'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    csv = require('express-csv');
 
 
 dotenv.load();
@@ -157,6 +158,29 @@ app.get('/stats', authenticate(), function(req, res) {
       return 0;
     }).reverse();
     res.render('stats', {apps: appsSortedByCount});
+  });
+});
+
+// Get CSV of metrics overview
+app.get('/stats.csv', authenticate(), function(req, res) {
+  var app = req.app;
+  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use('events');
+  eventsDb.view('deployments', 'by_repo', {group_level: 3}, function(err, body) {
+    var apps = [
+      ['URL', 'Year', 'Month', 'Deployments']
+    ];
+    body.rows.map(function(row) {
+      var url = row.key[0];
+      var year = row.key[1];
+      var month = row.key[2];
+      var count = row.value;
+      apps.push([url, year, month, count]);
+    });
+    res.csv(apps);
   });
 });
 
