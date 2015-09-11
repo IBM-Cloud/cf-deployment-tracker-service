@@ -43,9 +43,16 @@ app.use(expressSession({ secret: uuid.v4(),
 app.use(passport.initialize());
 app.use(passport.session());
 
-//if (!appEnv.isLocal) {
-//  app.use(require('express-force-ssl'));
-//}
+var appUrl;
+
+if (!appEnv.isLocal) {
+  //fixing this in a future commit
+  //app.use(require('express-force-ssl'));
+  appUrl = process.env.URL;
+}
+else {
+  appUrl = appEnv.url;
+}
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -311,7 +318,7 @@ function authenticate() {
         if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
           response.render('error', {message: "You must have a verified email to use this app. " +
             "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
-            "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
+            "  Then goto <a href=" + appUrl + "/auth/ibmid>" + appUrl + "/auth/ibmid</a>" +
             " to login again to pick up you verified email"});
           return next();
         }
@@ -344,7 +351,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Create the HTTP server
 http.createServer(app).listen(appEnv.port, appEnv.bind, function(){
-    console.log("server starting on " + appEnv.url);
+    console.log("server starting on " + appUrl);
 });
 //-------------------------------------------------------------------------------
 // Copyright IBM Corp. 2015
