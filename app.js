@@ -318,7 +318,7 @@ function authenticate() {
         else {
             var ibmer = false;
             _.each(verifiedEmail, function (email) {
-                if (email.toLowerCase().indexOf("ibm.com") !== -1) {
+                if (email.toLowerCase().endsWith("ibm.com")) {
                     ibmer = true;
                 }
             });

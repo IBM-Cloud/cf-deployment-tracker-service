@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "postinstall": "./admin.js track && ./admin.js db put && ./admin.js ddoc put && ./admin.js clean repository_url_hash",
-    "start": "node app.js",
+    "start": "node --harmony_strings app.js",
     "test": "grunt"
   },
   "repository": {
