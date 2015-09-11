@@ -61,7 +61,7 @@ var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || ' ');
 passport.use('ibmid', new IbmIdStrategy({
     clientID: SSO_CLIENT_ID,
     clientSecret: SSO_CLIENT_SECRET,
-    callbackURL: appEnv.url + '/auth/ibmid/callback',
+    callbackURL: "https://deployment-tracker.mybluemix.net" + '/auth/ibmid/callback',
     passReqToCallback: true
   }, function(req, accessToken, refreshToken, profile, done) {
     req.session.ibmid = {};
