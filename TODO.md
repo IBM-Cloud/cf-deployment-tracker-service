@@ -9,7 +9,7 @@
 * Linting
 * Track deployments to other non-Bluemix platforms
 * ~~Continuous integration~~ (complete)
-* Zero-downtime deployments (https://github.com/18F/cf-blue-green)
+* ~~Zero-downtime deployments (https://github.com/18F/cf-blue-green)~~ (complete)
 * ~~Move server to Dev-Advocates org~~ (complete)
 * ~~Tracking npm package~~ (complete)
 * Java library
