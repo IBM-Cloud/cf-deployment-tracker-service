@@ -43,9 +43,9 @@ app.use(expressSession({ secret: uuid.v4(),
 app.use(passport.initialize());
 app.use(passport.session());
 
-if (!appEnv.isLocal) {
-  app.use(require('express-force-ssl'));
-}
+//if (!appEnv.isLocal) {
+//  app.use(require('express-force-ssl'));
+//}
 
 passport.serializeUser(function(user, done) {
     done(null, user);
