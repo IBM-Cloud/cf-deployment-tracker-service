@@ -1,18 +1,19 @@
 language: node_js
 node_js:
 - '0.12'
-sudo: required'
+sudo: true
+env:
+  global:
+  - CF_APP=[deployment-tracker]
+  - CF_API=[https://api.ng.bluemix.net]
+  - secure: [CF_USERNAME=Hlvk+M20jyEk6zrdKPKFTcxaRfAKngY5RXSQ9GpZ+ItqZn6CUnJE9XG7ZXYOadp12AKoUrMFe2iqN52yR2cHBz43DR2809D3qFqIbElVdgNB8WSdGVUT3ZVavDuwd8I+esg36tiBrBj1kPTepqCkWYwXANfsUJFPJI3s/5y62gU=]
+  - CF_ORGANIZATION=[Dev-Advocates]
+  - CF_SPACE=[metrics]
+  - secure: [CF_PASSWORD=Jw3X7Ccq20vg67aIUMV7W39FD+Ph78/acGn/eQxXsoCDezi0MT9pOtTdDcwFnEn4w9IYi6vEELHBqWr3hDhrtdoA3RjNFUZ3qpnclwliWnUQYPu9Vkq2xaDGibElJEyZ19iz1Jiv3yoLAYHZkUM4AGoREtpz5dw+Mtnwj8q/iXU=]
+before_deploy: npm install -g cf-blue-green
 deploy:
-  edge: true
-  provider: cloudfoundry
-  api: https://api.ng.bluemix.net
-  username:
-    secure: Hlvk+M20jyEk6zrdKPKFTcxaRfAKngY5RXSQ9GpZ+ItqZn6CUnJE9XG7ZXYOadp12AKoUrMFe2iqN52yR2cHBz43DR2809D3qFqIbElVdgNB8WSdGVUT3ZVavDuwd8I+esg36tiBrBj1kPTepqCkWYwXANfsUJFPJI3s/5y62gU=
-  manifest: manifest.yml
-  password:
-    secure: Jw3X7Ccq20vg67aIUMV7W39FD+Ph78/acGn/eQxXsoCDezi0MT9pOtTdDcwFnEn4w9IYi6vEELHBqWr3hDhrtdoA3RjNFUZ3qpnclwliWnUQYPu9Vkq2xaDGibElJEyZ19iz1Jiv3yoLAYHZkUM4AGoREtpz5dw+Mtnwj8q/iXU=
-  organization: Dev-Advocates
-  space: metrics
+  provider: script
+  script: cf-blue-green-travis
   on:
     branch: master
     repo: IBM-Bluemix/cf-deployment-tracker-service
