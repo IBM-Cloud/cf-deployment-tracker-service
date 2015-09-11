@@ -22,13 +22,13 @@
     </div>
     <article class="container">
       <ol class="breadcrumb">
-        <li class="active">Stats</li>
+        <li><a href="/stats">Stats</a></li>
+        <li class="active">Repository</li>
       </ol>
-      <h1>Application Deployments by Repository</h1>
-      <p><a class="btn btn-default" href="/stats.csv" role="button">Download as CSV <span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></p>
+      <h1>Application Deployments for Repository</h1>
 {{#each apps}}
       <section>
-        <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}}{{#if url_hash}} <a href="/stats/{{url_hash}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>{{/if}} <span class="badge">{{count}}</span></h2>
+        <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank" aria-hidden="true">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}}{{#if url_hash}} <a href="/stats/{{url_hash}}"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></a>{{/if}} <span class="badge">{{count}}</span></h2>
         {{#if url_hash}}<input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">{{/if}}
         <ul class="list-group">
 {{#each this}}

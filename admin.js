@@ -100,6 +100,10 @@ program
               map: 'function(doc) { emit([doc.repository_url, doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }',
               reduce: '_count',
             },
+            by_repo_hash: {
+              map: 'function(doc) { emit([doc.repository_url_hash, doc.repository_url, doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }',
+              reduce: '_count',
+            },
             apps_by_year_and_month: {
               map: 'function(doc) { emit([doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.repository_url, doc.space_id, doc.application_version]); }',
               reduce: '_count',
@@ -167,6 +171,44 @@ program
     console.log();
     console.log('    $ ddoc put');
     console.log('    $ ddoc delete');
+    console.log();
+  });
+
+program
+  .command('clean <task>')
+  .description('Run a data cleanup task')
+  .action(function(task, options) {
+    var deploymentTrackerDb = app.get('deployment-tracker-db');
+    if (!deploymentTrackerDb) {
+      console.error('No database configured');
+      return;
+    }
+    switch (task) {
+      case 'repository_url_hash':
+        var eventsDb = deploymentTrackerDb.use('events');
+        eventsDb.view('deployments', 'by_repo_hash', {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}], reduce: false, include_docs: true}, function(err, body) {
+          console.log(body.rows.length + ' documents without repository URL hashes');
+          console.log('Adding repository URL hashes...');
+          var updatedDocs = 0;
+          var updatedDocErrors = 0;
+          body.rows.map(function(row) {
+            var event = row.doc;
+            if (event.repository_url_hash) {
+              console.error('Document should not have a repository_url_hash');
+              return;
+            }
+            if (event.repository_url) {
+              event.repository_url_hash = crypto.createHash('md5').update(event.repository_url).digest('hex');
+              eventsDb.insert(event);
+            }
+          });
+        });
+        break;
+    }
+  }).on('--help', function() {
+    console.log('  Examples:');
+    console.log();
+    console.log('    $ clean repository_url_hash');
     console.log();
   });
 
