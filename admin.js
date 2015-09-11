@@ -216,24 +216,7 @@ program
   .command('track')
   .description('Track application deployments')
   .action(function(options) {
-    var vcapApplication = app.get('vcapApplication');
-    if (vcapApplication) {
-      var event = {};
-      if (vcapApplication.application_name) {
-        event.application_name = vcapApplication.application_name;
-      }
-      if (vcapApplication.space_id) {
-        event.space_id = vcapApplication.space_id;
-      }
-      if (vcapApplication.application_version) {
-        event.application_version = vcapApplication.application_version;
-      }
-      if (vcapApplication.application_uris) {
-        event.application_uris = vcapApplication.application_uris;
-      }
-      // TODO: Make this work over HTTPS
-      http.post('http://deployment-tracker.mybluemix.net/', event);
-    }
+    require('cf-deployment-tracker-client').track();
   }).on('--help', function() {
     console.log('  Examples:');
     console.log();
