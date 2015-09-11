@@ -37,6 +37,7 @@
     "cookie-parser": "*",
     "dotenv": "^1.1.0",
     "express": "^4.12.3",
+    "express-csv": "^0.6.0",
     "express-force-ssl": "*",
     "express-session": "*",
     "hbs": "^3.0.1",
