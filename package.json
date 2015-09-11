@@ -24,10 +24,7 @@
       "email": "jbsloyer@us.ibm.com"
     }
   ],
-  "license": {
-    "type": "Apache-2.0",
-    "url": "http://opensource.org/licenses/apache2.0.php"
-  },
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service/issues"
   },
