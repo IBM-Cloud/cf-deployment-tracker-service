@@ -5,7 +5,7 @@ sudo: true
 env:
   global:
   - CF_APP=[deployment-tracker]
-  - CF_API=[https://api.ng.bluemix.net]
+  - CF_API=[api.ng.bluemix.net]
   - secure: "jYzrHECNACiBCBg1L9rYhXCWtKex6n5EA3tqOxHM8xauEwMj+VX1uM0srdSEhg4kJlCOuT2rwc9w2eWEO+8rFl2i2AAl2Lljs80S4PEvT4KsirnidGeVHnEoSaY32DGmGC0tEUv4hN4jOISAFuclCp8EARic9pWkp4PbA8kMWOE="
   - CF_ORGANIZATION=[Dev-Advocates]
   - CF_SPACE=[metrics]
