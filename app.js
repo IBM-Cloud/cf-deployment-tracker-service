@@ -33,7 +33,7 @@ var sessionStore;
 
 if (!appEnv.isLocal) {
   //  app.use(require('express-force-ssl'));
-  var redisService = appEnv.getServices()["deployment-tracker-redis"],
+  var redisService = appEnv.getService(new RegExp(".*" + "deployment-tracker-redis" +".*", "i")),
   hostnamePort = redisService.credentials.public_hostname.split(":");
 
   sessionStore = new RedisStore({
