@@ -38,7 +38,7 @@ program.version(pkg.version);
 program
   .command('db <method>')
   .description('Create (put) or delete the database')
-  .action(function(method, options) {
+  .action(function(method) {
     var deploymentTrackerDb = app.get('deployment-tracker-db');
     if (!deploymentTrackerDb) {
       console.error('No database configured');
@@ -46,11 +46,11 @@ program
     }
     switch (method) {
       case 'put':
-        deploymentTrackerDb.db.create('events', function(err, body) {
+        deploymentTrackerDb.db.create('events', function(err) {
           if (!err) {
             console.log('Deployment tracker events database created');
           } else {
-            if (412 == err.statusCode) {
+            if (412 === err.statusCode) {
               console.log('Deployment tracker events database already exists');
             } else {
               console.error('Error creating deployment tracker events database');
@@ -59,11 +59,11 @@ program
         });
         break;
       case 'delete':
-        deploymentTrackerDb.db.destroy('events', function(err, body) {
+        deploymentTrackerDb.db.destroy('events', function(err) {
           if (!err) {
             console.log('Deployment tracker events database deleted');
           } else {
-            if (404 == err.statusCode) {
+            if (404 === err.statusCode) {
               console.log('Deployment tracker events database does not exist');
             } else {
               console.error('Error deleting deployment tracker events database');
@@ -83,7 +83,7 @@ program
 program
   .command('ddoc <method>')
   .description('Create (put) or delete design documents')
-  .action(function(method, options) {
+  .action(function(method) {
     var deploymentTrackerDb = app.get('deployment-tracker-db');
     if (!deploymentTrackerDb) {
       console.error('No database configured');
@@ -113,19 +113,19 @@ program
             }
           }
         };
-        eventsDb.insert(ddoc, function(err, body) {
+        eventsDb.insert(ddoc, function(err) {
           if (!err) {
             console.log('Design document created');
           } else {
-            if (409 == err.statusCode) {
+            if (409 === err.statusCode) {
               eventsDb.get(ddoc._id, function(err, body) {
                 var rev = body._rev;
                 delete body._rev;
-                ddocHash = crypto.createHash('md5').update(JSON.stringify(ddoc)).digest('hex');
-                bodyHash = crypto.createHash('md5').update(JSON.stringify(body)).digest('hex');
-                if (ddocHash != bodyHash) {
+                var ddocHash = crypto.createHash('md5').update(JSON.stringify(ddoc)).digest('hex');
+                var bodyHash = crypto.createHash('md5').update(JSON.stringify(body)).digest('hex');
+                if (ddocHash !== bodyHash) {
                   ddoc._rev = rev;
-                  eventsDb.insert(ddoc, function(err, body) {
+                  eventsDb.insert(ddoc, function(err) {
                     if (!err) {
                       console.log('Design document updated');
                     } else {
@@ -145,11 +145,11 @@ program
       case 'delete':
         eventsDb.get('_design/deployments', function(err, doc) {
           if (!err) {
-            eventsDb.destroy('_design/deployments', doc._rev, function(err, body) {
+            eventsDb.destroy('_design/deployments', doc._rev, function(err) {
               if (!err) {
                 console.log('Design document deleted');
               } else {
-                if (404 == err.statusCode) {
+                if (404 === err.statusCode) {
                   console.log('Design document does not exist');
                 } else {
                   console.error('Error deleting design document');
@@ -157,7 +157,7 @@ program
               }
             });
           } else {
-            if (404 == err.statusCode) {
+            if (404 === err.statusCode) {
               console.log('Design document does not exist');
             } else {
               console.error('Error getting design document');
@@ -177,7 +177,7 @@ program
 program
   .command('clean <task>')
   .description('Run a data cleanup task')
-  .action(function(task, options) {
+  .action(function(task) {
     var deploymentTrackerDb = app.get('deployment-tracker-db');
     if (!deploymentTrackerDb) {
       console.error('No database configured');
@@ -189,8 +189,6 @@ program
         eventsDb.view('deployments', 'by_repo_hash', {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}], reduce: false, include_docs: true}, function(err, body) {
           console.log(body.rows.length + ' documents without repository URL hashes');
           console.log('Adding repository URL hashes...');
-          var updatedDocs = 0;
-          var updatedDocErrors = 0;
           body.rows.map(function(row) {
             var event = row.doc;
             if (event.repository_url_hash) {
@@ -215,7 +213,7 @@ program
 program
   .command('track')
   .description('Track application deployments')
-  .action(function(options) {
+  .action(function() {
     require('cf-deployment-tracker-client').track();
   }).on('--help', function() {
     console.log('  Examples:');

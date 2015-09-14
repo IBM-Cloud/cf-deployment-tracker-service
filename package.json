@@ -51,10 +51,10 @@
     "validator": "^4.0.5"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-cli": "~0.1.13",
-    "grunt-contrib-jshint": "~0.6.4",
-    "jshint": "~2.8.0",
-    "grunt-jscs": "~2.1.0"
+    "grunt": "*",
+    "grunt-cli": "*",
+    "grunt-contrib-jshint": "*",
+    "jshint": "*",
+    "grunt-jscs": "*"
   }
 }

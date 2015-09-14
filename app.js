@@ -4,7 +4,6 @@ var express = require('express'),
     http = require('http'),
     path = require('path'),
     cloudant = require('cloudant'),
-    program = require('commander'),
     dotenv = require('dotenv'),
     validator = require('validator'),
     bodyParser = require('body-parser'),
@@ -17,7 +16,7 @@ var express = require('express'),
     _ = require("underscore"),
     uuid = require('node-uuid'),
     crypto = require('crypto'),
-    csv = require('express-csv');
+    csv = require('express-csv'); // jshint ignore:line
 
 
 dotenv.load();
@@ -50,6 +49,41 @@ app.use(passport.session());
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
+
+function authenticate() {
+    return function(request, response, next) {
+        if (appEnv.isLocal) {
+          return next();
+        }
+        if (!request.isAuthenticated() || request.session.ibmid === undefined) {
+            response.redirect('/auth/ibmid');
+            return next();
+        }
+
+        console.log(request.session.ibmid);
+        var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
+
+        if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
+          response.render('error', {message: "You must have a verified email to use this app. " +
+            "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
+            "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
+            " to login again to pick up you verified email"});
+          return next();
+        }
+        else {
+            var ibmer = false;
+            _.each(verifiedEmail, function (email) {
+                if (email.toLowerCase().endsWith("ibm.com")) {
+                    ibmer = true;
+                }
+            });
+            if (ibmer === false) {
+              response.render('error', {message: "You must be an IBM'er to use this app"});
+            }
+            return next();
+        }
+    };
+}
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -148,7 +182,7 @@ app.get('/stats', authenticate(), function(req, res) {
         apps[url].count += row.value;
       }
     });
-    appsSortedByCount = [];
+    var appsSortedByCount = [];
     for (var url in apps) {
       appsSortedByCount.push(apps[url]);
     }
@@ -192,11 +226,14 @@ app.get('/stats.csv', authenticate(), function(req, res) {
 app.get('/stats/:hash', authenticate(), function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get('deployment-tracker-db');
+  var appsSortedByCount = [];
+
   if (!deploymentTrackerDb) {
     return res.status(500);
   }
   var eventsDb = deploymentTrackerDb.use('events');
   var hash = req.param('hash');
+
   eventsDb.view('deployments', 'by_repo_hash', {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
     var apps = {};
     body.rows.map(function(row) {
@@ -224,7 +261,6 @@ app.get('/stats/:hash', authenticate(), function(req, res) {
         apps[url].count += row.value;
       }
     });
-    appsSortedByCount = [];
     for (var url in apps) {
       appsSortedByCount.push(apps[url]);
     }
@@ -240,10 +276,6 @@ app.get('/stats/:hash', authenticate(), function(req, res) {
     res.render('repo', {apps: appsSortedByCount});
   });
 });
-
-app.post('/', urlEncodedParser, track);
-
-app.post('/api/v1/track', jsonParser, track);
 
 function track(req, res) {
   var app = req.app;
@@ -280,7 +312,7 @@ function track(req, res) {
     event.application_uris = req.body.application_uris;
   }
   var eventsDb = deploymentTrackerDb.use('events');
-  eventsDb.insert(event, function(err, body) {
+  eventsDb.insert(event, function (err) {
     if (err) {
       console.error(err);
       return res.status(500).json({error: 'Internal Server Error'});
@@ -291,6 +323,10 @@ function track(req, res) {
   });
 }
 
+app.post('/', urlEncodedParser, track);
+
+app.post('/api/v1/track', jsonParser, track);
+
 app.get("/api/v1/whoami", authenticate(), function (request, response) {
     response.send(request.session.ibmid);
 });
@@ -298,41 +334,6 @@ app.get("/api/v1/whoami", authenticate(), function (request, response) {
 app.get('/error', function (request, response) {
     response.render('error', {message: "Failed to authenticate"});
 });
-
-function authenticate() {
-    return function(request, response, next) {
-        if (appEnv.isLocal) {
-          return next();
-        }
-        if (!request.isAuthenticated() || request.session.ibmid === undefined) {
-            response.redirect('/auth/ibmid');
-            return next();
-        }
-
-        console.log(request.session.ibmid);
-        var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
-
-        if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
-          response.render('error', {message: "You must have a verified email to use this app. " +
-            "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
-            "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
-            " to login again to pick up you verified email"});
-          return next();
-        }
-        else {
-            var ibmer = false;
-            _.each(verifiedEmail, function (email) {
-                if (email.toLowerCase().endsWith("ibm.com")) {
-                    ibmer = true;
-                }
-            });
-            if (ibmer === false) {
-              response.render('error', {message: "You must be an IBM'er to use this app"});
-            }
-            return next();
-        }
-    };
-}
 
 //prevent this page getting indexed
 app.get("/robots.txt", function (request, response) {
