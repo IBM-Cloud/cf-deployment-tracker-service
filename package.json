@@ -43,12 +43,12 @@
     "express-session": "*",
     "hbs": "^3.0.1",
     "http-post": "^0.1.1",
-    "node-uuid": "*",
     "passport": "0.2.2",
     "passport-ibmid-oauth2": "*",
     "passport-oauth": "1.0.0",
     "underscore": "*",
-    "validator": "^4.0.5"
+    "validator": "^4.0.5",
+    "connect-redis": "*"
   },
   "devDependencies": {
     "grunt": "*",
