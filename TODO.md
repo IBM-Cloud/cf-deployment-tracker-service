@@ -12,6 +12,8 @@
 * ~~Zero-downtime deployments (https://github.com/18F/cf-blue-green)~~ (complete)
 * ~~Move server to Dev-Advocates org~~ (complete)
 * ~~Tracking npm package~~ (complete)
+* ~~Scale app~~ (complete)
+* ~~Use Redis as a session store~~ (complete)
 * Java library
 * ~~SSL tracking (client side)~~ (complete)
 * Interactive opt-out (if possible)
