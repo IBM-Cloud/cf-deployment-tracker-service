@@ -8,6 +8,10 @@ The Deployment Tracker tracks deployments of sample applications to [IBM Bluemix
 
 [![Build Status](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-service.svg?branch=master)](https://travis-ci.org/IBM-Bluemix/cf-deployment-tracker-service) [![Dependencies](https://david-dm.org/IBM-Bluemix/cf-deployment-tracker-service.svg)](https://david-dm.org/IBM-Bluemix/cf-deployment-tracker-service)
 
+## App Status
+[![Uptime](https://share.pingdom.com/banners/e6a9447b)](http://deployment-tracker.mybluemix.net/)
+
+
 ## Cloning
 
 Get the project and change into the project directory:
