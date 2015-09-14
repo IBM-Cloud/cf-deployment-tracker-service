@@ -12,9 +12,9 @@ var express = require("express"),
   cookieParser = require("cookie-parser"),
   IbmIdStrategy = require("passport-ibmid-oauth2").Strategy,
   expressSession = require("express-session"),
-  sessionStore = new expressSession.MemoryStore(),
+  memoryStore = new expressSession.MemoryStore(),
+  RedisStore = require("connect-redis")(expressSession),
   _ = require("underscore"),
-  uuid = require("node-uuid"),
   crypto = require("crypto"),
   csv = require("express-csv"); // jshint ignore:line
 
@@ -29,22 +29,32 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+var sessionStore;
+
+if (!appEnv.isLocal) {
+  //  app.use(require('express-force-ssl'));
+  var redisService = appEnv.getServices()["deployment-tracker-redis"],
+  hostnamePort = redisService.credentials.public_hostname.split(":");
+
+  sessionStore = new RedisStore({
+    host: hostnamePort[0],
+    port: hostnamePort[1],
+    pass: redisService.credentials.password
+  });
+}
+else {
+  sessionStore = memoryStore;
+}
+
 //in future PR switch to redis or cloudant as a session store
-app.use(expressSession({ secret: uuid.v4(),
+app.use(expressSession({ secret: process.env.SECRET || "blah",
   store: sessionStore,
-  //needs to be revaled when a session store is added
-  //https://github.com/expressjs/session#resave
-  resave: true,
+  resave: false,
   saveUninitialized: false
-  //https://github.com/expressjs/session#saveuninitialized
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-//if (!appEnv.isLocal) {
-//  app.use(require('express-force-ssl'));
-//}
 
 String.prototype.endsWith = function(suffix) {
   return this.indexOf(suffix, this.length - suffix.length) !== -1;
