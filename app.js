@@ -54,6 +54,10 @@ else {
   appUrl = appEnv.url;
 }
 
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
