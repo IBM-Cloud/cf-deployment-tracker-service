@@ -5,7 +5,8 @@ declared-services:
     plan: Shared
 applications:
 - name: deployment-tracker
-  memory: 128M
+  memory: 256M
+  instances: 3
   random-route: true
   services:
   - deployment-tracker-db
