@@ -43,16 +43,9 @@ app.use(expressSession({ secret: uuid.v4(),
 app.use(passport.initialize());
 app.use(passport.session());
 
-var appUrl;
-
-if (!appEnv.isLocal) {
-  //fixing this in a future commit
-  //app.use(require('express-force-ssl'));
-  appUrl = process.env.URL;
-}
-else {
-  appUrl = appEnv.url;
-}
+//if (!appEnv.isLocal) {
+//  app.use(require('express-force-ssl'));
+//}
 
 String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
@@ -72,7 +65,7 @@ var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || ' ');
 passport.use('ibmid', new IbmIdStrategy({
     clientID: SSO_CLIENT_ID,
     clientSecret: SSO_CLIENT_SECRET,
-    callbackURL: appUrl + '/auth/ibmid/callback',
+    callbackURL: "https://deployment-tracker.mybluemix.net" + '/auth/ibmid/callback',
     passReqToCallback: true
   }, function(req, accessToken, refreshToken, profile, done) {
     req.session.ibmid = {};
@@ -322,7 +315,7 @@ function authenticate() {
         if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
           response.render('error', {message: "You must have a verified email to use this app. " +
             "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
-            "  Then goto <a href=" + appUrl + "/auth/ibmid>" + appUrl + "/auth/ibmid</a>" +
+            "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
             " to login again to pick up you verified email"});
           return next();
         }
@@ -355,7 +348,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Create the HTTP server
 http.createServer(app).listen(appEnv.port, appEnv.bind, function(){
-    console.log("server starting on " + appUrl);
+    console.log("server starting on " + appEnv.url);
 });
 //-------------------------------------------------------------------------------
 // Copyright IBM Corp. 2015
