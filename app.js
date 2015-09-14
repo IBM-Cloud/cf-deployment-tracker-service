@@ -1,23 +1,22 @@
 // Licensed under the Apache 2.0 License. See footer for details.
 
-var express = require('express'),
-    http = require('http'),
-    path = require('path'),
-    cloudant = require('cloudant'),
-    program = require('commander'),
-    dotenv = require('dotenv'),
-    validator = require('validator'),
-    bodyParser = require('body-parser'),
-    passport = require('passport'),
-    cfenv = require('cfenv'),
-    cookieParser = require('cookie-parser'),
-    IbmIdStrategy = require('passport-ibmid-oauth2').Strategy,
-    expressSession = require('express-session'),
-    sessionStore = new expressSession.MemoryStore(),
-    _ = require("underscore"),
-    uuid = require('node-uuid'),
-    crypto = require('crypto'),
-    csv = require('express-csv');
+var express = require("express"),
+  http = require("http"),
+  path = require("path"),
+  cloudant = require("cloudant"),
+  dotenv = require("dotenv"),
+  validator = require("validator"),
+  bodyParser = require("body-parser"),
+  passport = require("passport"),
+  cfenv = require("cfenv"),
+  cookieParser = require("cookie-parser"),
+  IbmIdStrategy = require("passport-ibmid-oauth2").Strategy,
+  expressSession = require("express-session"),
+  sessionStore = new expressSession.MemoryStore(),
+  _ = require("underscore"),
+  uuid = require("node-uuid"),
+  crypto = require("crypto"),
+  csv = require("express-csv"); // jshint ignore:line
 
 
 dotenv.load();
@@ -32,12 +31,12 @@ app.use(cookieParser());
 
 //in future PR switch to redis or cloudant as a session store
 app.use(expressSession({ secret: uuid.v4(),
-    store: sessionStore,
-    //needs to be revaled when a session store is added
-    //https://github.com/expressjs/session#resave
-    resave: true,
-    saveUninitialized: false
-    //https://github.com/expressjs/session#saveuninitialized
+  store: sessionStore,
+  //needs to be revaled when a session store is added
+  //https://github.com/expressjs/session#resave
+  resave: true,
+  saveUninitialized: false
+  //https://github.com/expressjs/session#saveuninitialized
 }));
 
 app.use(passport.initialize());
@@ -48,26 +47,63 @@ app.use(passport.session());
 //}
 
 String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+  return this.indexOf(suffix, this.length - suffix.length) !== -1;
 };
 
+function authenticate() {
+  return function(request, response, next) {
+    if (appEnv.isLocal) {
+      return next();
+    }
+    if (!request.isAuthenticated() || request.session.ibmid === undefined) {
+      response.redirect("/auth/ibmid");
+      return next();
+    }
+
+    console.log(request.session.ibmid);
+    var verifiedEmail = request.session.ibmid.profile["idaas.verified_email"];
+
+    if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
+      response.render("error", {message: "You must have a verified email to use this app. " +
+        "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>" +
+        "https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
+        "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
+        " to login again to pick up you verified email"});
+      return next();
+    }
+    else {
+      var ibmer = false;
+      _.each(verifiedEmail, function (email) {
+        if (email.toLowerCase().endsWith("ibm.com")) {
+          ibmer = true;
+        }
+      });
+      if (ibmer === false) {
+        response.render("error", {message: "You must be an IBM'er to use this app"});
+      }
+      return next();
+    }
+  };
+}
+
 passport.serializeUser(function(user, done) {
-    done(null, user);
+  done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-var SSO_CLIENT_ID = (process.env.SSO_CLIENT_ID || ' ');
-var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || ' ');
+var SSO_CLIENT_ID = (process.env.SSO_CLIENT_ID || " ");
+var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || " ");
 
-passport.use('ibmid', new IbmIdStrategy({
-    clientID: SSO_CLIENT_ID,
-    clientSecret: SSO_CLIENT_SECRET,
-    callbackURL: "https://deployment-tracker.mybluemix.net" + '/auth/ibmid/callback',
-    passReqToCallback: true
-  }, function(req, accessToken, refreshToken, profile, done) {
+passport.use("ibmid", new IbmIdStrategy({
+  clientID: SSO_CLIENT_ID,
+  clientSecret: SSO_CLIENT_SECRET,
+  callbackURL: "https://deployment-tracker.mybluemix.net" + "/auth/ibmid/callback",
+  passReqToCallback: true
+},
+  function(req, accessToken, refreshToken, profile, done) {
     req.session.ibmid = {};
     req.session.ibmid.profile = profile;
     done(null, profile);
@@ -75,27 +111,28 @@ passport.use('ibmid', new IbmIdStrategy({
   }
 ));
 
-app.get('/auth/ibmid', passport.authenticate('ibmid', { scope: ['profile'] }), function (request, response) {
-    request = request;
-    response = response;
+app.get("/auth/ibmid", passport.authenticate("ibmid", { scope: ["profile"] }), function (request, response) {
+  request = request;
+  response = response;
 });
 
-app.get('/auth/ibmid/callback', passport.authenticate('ibmid', { failureRedirect: '/error', scope: ['profile'] }), function(req, res) {
-  res.redirect('/stats');
+app.get("/auth/ibmid/callback", passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] }),
+  function(req, res) {
+  res.redirect("/stats");
 });
 
 app.get("/logout", function (request, response) {
-    passport._strategy('ibmid').logout(request, response, appEnv.url);
+  passport._strategy("ibmid").logout(request, response, appEnv.url);
 });
 
 (function(app) {
   if (process.env.VCAP_SERVICES) {
     var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
-    app.set('vcapServices', vcapServices);
+    app.set("vcapServices", vcapServices);
     if (vcapServices.cloudantNoSQLDB && vcapServices.cloudantNoSQLDB.length > 0) {
       var service = vcapServices.cloudantNoSQLDB[0];
       if (service.credentials) {
-        app.set('deployment-tracker-db', cloudant({
+        app.set("deployment-tracker-db", cloudant({
           username: service.credentials.username,
           password: service.credentials.password,
           account: service.credentials.username
@@ -110,19 +147,19 @@ var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
 
 
 
-app.get('/', function(req, res) {
-    res.render('index');
+app.get("/", function(req, res) {
+  res.render("index");
 });
 
 // Get metrics overview
-app.get('/stats', authenticate(), function(req, res) {
+app.get("/stats", authenticate(), function(req, res) {
   var app = req.app;
-  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
     return res.status(500);
   }
-  var eventsDb = deploymentTrackerDb.use('events');
-  eventsDb.view('deployments', 'by_repo', {group_level: 3}, function(err, body) {
+  var eventsDb = deploymentTrackerDb.use("events");
+  eventsDb.view("deployments", "by_repo", {group_level: 3}, function(err, body) {
     var apps = {};
     body.rows.map(function(row) {
       var url = row.key[0];
@@ -134,10 +171,10 @@ app.get('/stats', authenticate(), function(req, res) {
           count: 0
         };
         if (url) {
-          apps[url].url_hash = crypto.createHash('md5').update(url).digest('hex');
+          apps[url].url_hash = crypto.createHash("md5").update(url).digest("hex");
         }
       }
-      if (validator.isURL(url, {protocols: ['http','https'], require_protocol: true})) {
+      if (validator.isURL(url, {protocols: ["http","https"], require_protocol: true})) {
         apps[url].is_url = true;
       }
       if (!(year in apps[url])) {
@@ -148,7 +185,7 @@ app.get('/stats', authenticate(), function(req, res) {
         apps[url].count += row.value;
       }
     });
-    appsSortedByCount = [];
+    var appsSortedByCount = [];
     for (var url in apps) {
       appsSortedByCount.push(apps[url]);
     }
@@ -161,21 +198,21 @@ app.get('/stats', authenticate(), function(req, res) {
       }
       return 0;
     }).reverse();
-    res.render('stats', {apps: appsSortedByCount});
+    res.render("stats", {apps: appsSortedByCount});
   });
 });
 
 // Get CSV of metrics overview
-app.get('/stats.csv', authenticate(), function(req, res) {
+app.get("/stats.csv", authenticate(), function(req, res) {
   var app = req.app;
-  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
     return res.status(500);
   }
-  var eventsDb = deploymentTrackerDb.use('events');
-  eventsDb.view('deployments', 'by_repo', {group_level: 3}, function(err, body) {
+  var eventsDb = deploymentTrackerDb.use("events");
+  eventsDb.view("deployments", "by_repo", {group_level: 3}, function(err, body) {
     var apps = [
-      ['URL', 'Year', 'Month', 'Deployments']
+      ["URL", "Year", "Month", "Deployments"]
     ];
     body.rows.map(function(row) {
       var url = row.key[0];
@@ -189,15 +226,19 @@ app.get('/stats.csv', authenticate(), function(req, res) {
 });
 
 // Get metrics for a specific repo
-app.get('/stats/:hash', authenticate(), function(req, res) {
+app.get("/stats/:hash", authenticate(), function(req, res) {
   var app = req.app;
-  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  var deploymentTrackerDb = app.get("deployment-tracker-db");
+  var appsSortedByCount = [];
+
   if (!deploymentTrackerDb) {
     return res.status(500);
   }
-  var eventsDb = deploymentTrackerDb.use('events');
-  var hash = req.param('hash');
-  eventsDb.view('deployments', 'by_repo_hash', {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
+  var eventsDb = deploymentTrackerDb.use("events");
+  var hash = req.param("hash");
+
+  eventsDb.view("deployments", "by_repo_hash",
+    {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
     var apps = {};
     body.rows.map(function(row) {
       var hash = row.key[0];
@@ -213,7 +254,7 @@ app.get('/stats/:hash', authenticate(), function(req, res) {
           apps[url].url_hash = hash;
         }
       }
-      if (validator.isURL(url, {protocols: ['http','https'], require_protocol: true})) {
+      if (validator.isURL(url, {protocols: ["http","https"], require_protocol: true})) {
         apps[url].is_url = true;
       }
       if (!(year in apps[url])) {
@@ -224,7 +265,6 @@ app.get('/stats/:hash', authenticate(), function(req, res) {
         apps[url].count += row.value;
       }
     });
-    appsSortedByCount = [];
     for (var url in apps) {
       appsSortedByCount.push(apps[url]);
     }
@@ -237,19 +277,15 @@ app.get('/stats/:hash', authenticate(), function(req, res) {
       }
       return 0;
     }).reverse();
-    res.render('repo', {apps: appsSortedByCount});
+    res.render("repo", {apps: appsSortedByCount});
   });
 });
 
-app.post('/', urlEncodedParser, track);
-
-app.post('/api/v1/track', jsonParser, track);
-
 function track(req, res) {
   var app = req.app;
-  var deploymentTrackerDb = app.get('deployment-tracker-db');
+  var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
-    return res.status(500).json({ error: 'No database server configured' });
+    return res.status(500).json({ error: "No database server configured" });
   }
   if (!req.body) {
     return res.sendStatus(400);
@@ -265,7 +301,7 @@ function track(req, res) {
   }
   if (req.body.repository_url) {
     event.repository_url = req.body.repository_url;
-    event.repository_url_hash = crypto.createHash('md5').update(event.repository_url).digest('hex');
+    event.repository_url_hash = crypto.createHash("md5").update(event.repository_url).digest("hex");
   }
   if (req.body.application_name) {
     event.application_name = req.body.application_name;
@@ -279,11 +315,11 @@ function track(req, res) {
   if (req.body.application_uris) {
     event.application_uris = req.body.application_uris;
   }
-  var eventsDb = deploymentTrackerDb.use('events');
-  eventsDb.insert(event, function(err, body) {
+  var eventsDb = deploymentTrackerDb.use("events");
+  eventsDb.insert(event, function (err) {
     if (err) {
       console.error(err);
-      return res.status(500).json({error: 'Internal Server Error'});
+      return res.status(500).json({error: "Internal Server Error"});
     }
     return res.status(201).json({
       ok: true
@@ -291,64 +327,33 @@ function track(req, res) {
   });
 }
 
+app.post("/", urlEncodedParser, track);
+
+app.post("/api/v1/track", jsonParser, track);
+
 app.get("/api/v1/whoami", authenticate(), function (request, response) {
-    response.send(request.session.ibmid);
+  response.send(request.session.ibmid);
 });
 
-app.get('/error', function (request, response) {
-    response.render('error', {message: "Failed to authenticate"});
+app.get("/error", function (request, response) {
+  response.render("error", {message: "Failed to authenticate"});
 });
-
-function authenticate() {
-    return function(request, response, next) {
-        if (appEnv.isLocal) {
-          return next();
-        }
-        if (!request.isAuthenticated() || request.session.ibmid === undefined) {
-            response.redirect('/auth/ibmid');
-            return next();
-        }
-
-        console.log(request.session.ibmid);
-        var verifiedEmail = request.session.ibmid.profile['idaas.verified_email'];
-
-        if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
-          response.render('error', {message: "You must have a verified email to use this app. " +
-            "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
-            "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
-            " to login again to pick up you verified email"});
-          return next();
-        }
-        else {
-            var ibmer = false;
-            _.each(verifiedEmail, function (email) {
-                if (email.toLowerCase().endsWith("ibm.com")) {
-                    ibmer = true;
-                }
-            });
-            if (ibmer === false) {
-              response.render('error', {message: "You must be an IBM'er to use this app"});
-            }
-            return next();
-        }
-    };
-}
 
 //prevent this page getting indexed
 app.get("/robots.txt", function (request, response) {
-    response.send("User-agent: *\nDisallow: /");
+  response.send("User-agent: *\nDisallow: /");
 });
 
 // Set the view engine
-app.set('view engine', 'html');
-app.engine('html', require('hbs').__express);
+app.set("view engine", "html");
+app.engine("html", require("hbs").__express);
 
 // Serve static assets
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Create the HTTP server
 http.createServer(app).listen(appEnv.port, appEnv.bind, function(){
-    console.log("server starting on " + appEnv.url);
+  console.log("server starting on " + appEnv.url);
 });
 //-------------------------------------------------------------------------------
 // Copyright IBM Corp. 2015

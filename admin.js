@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 // Licensed under the Apache 2.0 License. See footer for details.
 
-var express = require('express'),
-    http = require('http'),
-    path = require('path'),
-    cloudant = require('cloudant'),
-    program = require('commander'),
-    dotenv = require('dotenv'),
-    crypto = require('crypto'),
-    pkg = require(path.join(__dirname, 'package.json'));
+var express = require("express"),
+    http = require("http"),
+    path = require("path"),
+    cloudant = require("cloudant"),
+    program = require("commander"),
+    dotenv = require("dotenv"),
+    crypto = require("crypto"),
+    pkg = require(path.join(__dirname, "package.json"));
 
-http.post = require('http-post');
+http.post = require("http-post");
 
 dotenv.load();
 
@@ -19,11 +19,11 @@ var app = express();
 (function(app) {
   if (process.env.VCAP_SERVICES) {
     var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
-    app.set('vcapServices', vcapServices);
+    app.set("vcapServices", vcapServices);
     if (vcapServices.cloudantNoSQLDB && vcapServices.cloudantNoSQLDB.length > 0) {
       var service = vcapServices.cloudantNoSQLDB[0];
       if (service.credentials) {
-        app.set('deployment-tracker-db', cloudant({
+        app.set("deployment-tracker-db", cloudant({
           username: service.credentials.username,
           password: service.credentials.password,
           account: service.credentials.username
@@ -36,191 +36,195 @@ var app = express();
 program.version(pkg.version);
 
 program
-  .command('db <method>')
-  .description('Create (put) or delete the database')
-  .action(function(method, options) {
-    var deploymentTrackerDb = app.get('deployment-tracker-db');
+  .command("db <method>")
+  .description("Create (put) or delete the database")
+  .action(function(method) {
+    var deploymentTrackerDb = app.get("deployment-tracker-db");
     if (!deploymentTrackerDb) {
-      console.error('No database configured');
+      console.error("No database configured");
       return;
     }
     switch (method) {
-      case 'put':
-        deploymentTrackerDb.db.create('events', function(err, body) {
+      case "put":
+        deploymentTrackerDb.db.create("events", function(err) {
           if (!err) {
-            console.log('Deployment tracker events database created');
+            console.log("Deployment tracker events database created");
           } else {
-            if (412 == err.statusCode) {
-              console.log('Deployment tracker events database already exists');
+            if (412 === err.statusCode) {
+              console.log("Deployment tracker events database already exists");
             } else {
-              console.error('Error creating deployment tracker events database');
+              console.error("Error creating deployment tracker events database");
             }
           }
         });
         break;
-      case 'delete':
-        deploymentTrackerDb.db.destroy('events', function(err, body) {
+      case "delete":
+        deploymentTrackerDb.db.destroy("events", function(err) {
           if (!err) {
-            console.log('Deployment tracker events database deleted');
+            console.log("Deployment tracker events database deleted");
           } else {
-            if (404 == err.statusCode) {
-              console.log('Deployment tracker events database does not exist');
+            if (404 === err.statusCode) {
+              console.log("Deployment tracker events database does not exist");
             } else {
-              console.error('Error deleting deployment tracker events database');
+              console.error("Error deleting deployment tracker events database");
             }
           }
         });
         break;
     }
-  }).on('--help', function() {
-    console.log('  Examples:');
+  }).on("--help", function() {
+    console.log("  Examples:");
     console.log();
-    console.log('    $ db put');
-    console.log('    $ db delete');
+    console.log("    $ db put");
+    console.log("    $ db delete");
     console.log();
   });
 
 program
-  .command('ddoc <method>')
-  .description('Create (put) or delete design documents')
-  .action(function(method, options) {
-    var deploymentTrackerDb = app.get('deployment-tracker-db');
+  .command("ddoc <method>")
+  .description("Create (put) or delete design documents")
+  .action(function(method) {
+    var deploymentTrackerDb = app.get("deployment-tracker-db");
     if (!deploymentTrackerDb) {
-      console.error('No database configured');
+      console.error("No database configured");
       return;
     }
-    var eventsDb = deploymentTrackerDb.use('events');
+    var eventsDb = deploymentTrackerDb.use("events");
     switch (method) {
-      case 'put':
+      case "put":
         // TODO: Allow this to handle migrations
         var ddoc = {
-          _id: '_design/deployments',
+          _id: "_design/deployments",
           views: {
             by_repo: {
-              map: 'function(doc) { emit([doc.repository_url, doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }',
-              reduce: '_count',
+              map: "function(doc) { emit([doc.repository_url, doc.date_received.substring(0, 4), " +
+                "doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, " +
+                "doc.application_version]); }",
+              reduce: "_count",
             },
             by_repo_hash: {
-              map: 'function(doc) { emit([doc.repository_url_hash, doc.repository_url, doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }',
-              reduce: '_count',
+              map: "function(doc) { emit([doc.repository_url_hash, doc.repository_url, " +
+                "doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), " +
+                "doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }",
+              reduce: "_count",
             },
             apps_by_year_and_month: {
-              map: 'function(doc) { emit([doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), doc.repository_url, doc.space_id, doc.application_version]); }',
-              reduce: '_count',
+              map: "function(doc) { emit([doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), " +
+                "doc.repository_url, doc.space_id, doc.application_version]); }",
+              reduce: "_count",
             },
             spaces: {
-              map: 'function (doc) {emit(doc.space_id, doc); }'
+              map: "function (doc) {emit(doc.space_id, doc); }"
             }
           }
         };
-        eventsDb.insert(ddoc, function(err, body) {
+        eventsDb.insert(ddoc, function(err) {
           if (!err) {
-            console.log('Design document created');
+            console.log("Design document created");
           } else {
-            if (409 == err.statusCode) {
+            if (409 === err.statusCode) {
               eventsDb.get(ddoc._id, function(err, body) {
                 var rev = body._rev;
                 delete body._rev;
-                ddocHash = crypto.createHash('md5').update(JSON.stringify(ddoc)).digest('hex');
-                bodyHash = crypto.createHash('md5').update(JSON.stringify(body)).digest('hex');
-                if (ddocHash != bodyHash) {
+                var ddocHash = crypto.createHash("md5").update(JSON.stringify(ddoc)).digest("hex");
+                var bodyHash = crypto.createHash("md5").update(JSON.stringify(body)).digest("hex");
+                if (ddocHash !== bodyHash) {
                   ddoc._rev = rev;
-                  eventsDb.insert(ddoc, function(err, body) {
+                  eventsDb.insert(ddoc, function(err) {
                     if (!err) {
-                      console.log('Design document updated');
+                      console.log("Design document updated");
                     } else {
-                      console.error('Error updating design document database');
+                      console.error("Error updating design document database");
                     }
                   });
                 } else {
-                  console.log('Design document already exists and does not need updating');
+                  console.log("Design document already exists and does not need updating");
                 }
               });
             } else {
-              console.error('Error creating design document database');
+              console.error("Error creating design document database");
             }
           }
         });
         break;
-      case 'delete':
-        eventsDb.get('_design/deployments', function(err, doc) {
+      case "delete":
+        eventsDb.get("_design/deployments", function(err, doc) {
           if (!err) {
-            eventsDb.destroy('_design/deployments', doc._rev, function(err, body) {
+            eventsDb.destroy("_design/deployments", doc._rev, function(err) {
               if (!err) {
-                console.log('Design document deleted');
+                console.log("Design document deleted");
               } else {
-                if (404 == err.statusCode) {
-                  console.log('Design document does not exist');
+                if (404 === err.statusCode) {
+                  console.log("Design document does not exist");
                 } else {
-                  console.error('Error deleting design document');
+                  console.error("Error deleting design document");
                 }
               }
             });
           } else {
-            if (404 == err.statusCode) {
-              console.log('Design document does not exist');
+            if (404 === err.statusCode) {
+              console.log("Design document does not exist");
             } else {
-              console.error('Error getting design document');
+              console.error("Error getting design document");
             }
           }
         });
         break;
     }
-  }).on('--help', function() {
-    console.log('  Examples:');
+  }).on("--help", function() {
+    console.log("  Examples:");
     console.log();
-    console.log('    $ ddoc put');
-    console.log('    $ ddoc delete');
+    console.log("    $ ddoc put");
+    console.log("    $ ddoc delete");
     console.log();
   });
 
 program
-  .command('clean <task>')
-  .description('Run a data cleanup task')
-  .action(function(task, options) {
-    var deploymentTrackerDb = app.get('deployment-tracker-db');
+  .command("clean <task>")
+  .description("Run a data cleanup task")
+  .action(function(task) {
+    var deploymentTrackerDb = app.get("deployment-tracker-db");
     if (!deploymentTrackerDb) {
-      console.error('No database configured');
+      console.error("No database configured");
       return;
     }
     switch (task) {
-      case 'repository_url_hash':
-        var eventsDb = deploymentTrackerDb.use('events');
-        eventsDb.view('deployments', 'by_repo_hash', {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}], reduce: false, include_docs: true}, function(err, body) {
-          console.log(body.rows.length + ' documents without repository URL hashes');
-          console.log('Adding repository URL hashes...');
-          var updatedDocs = 0;
-          var updatedDocErrors = 0;
+      case "repository_url_hash":
+        var eventsDb = deploymentTrackerDb.use("events");
+        eventsDb.view("deployments", "by_repo_hash", {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}],
+            reduce: false, include_docs: true}, function(err, body) {
+          console.log(body.rows.length + " documents without repository URL hashes");
+          console.log("Adding repository URL hashes...");
           body.rows.map(function(row) {
             var event = row.doc;
             if (event.repository_url_hash) {
-              console.error('Document should not have a repository_url_hash');
+              console.error("Document should not have a repository_url_hash");
               return;
             }
             if (event.repository_url) {
-              event.repository_url_hash = crypto.createHash('md5').update(event.repository_url).digest('hex');
+              event.repository_url_hash = crypto.createHash("md5").update(event.repository_url).digest("hex");
               eventsDb.insert(event);
             }
           });
         });
         break;
     }
-  }).on('--help', function() {
-    console.log('  Examples:');
+  }).on("--help", function() {
+    console.log("  Examples:");
     console.log();
-    console.log('    $ clean repository_url_hash');
+    console.log("    $ clean repository_url_hash");
     console.log();
   });
 
 program
-  .command('track')
-  .description('Track application deployments')
-  .action(function(options) {
-    require('cf-deployment-tracker-client').track();
-  }).on('--help', function() {
-    console.log('  Examples:');
+  .command("track")
+  .description("Track application deployments")
+  .action(function() {
+    require("cf-deployment-tracker-client").track();
+  }).on("--help", function() {
+    console.log("  Examples:");
     console.log();
-    console.log('    $ track');
+    console.log("    $ track");
     console.log();
   });
 
