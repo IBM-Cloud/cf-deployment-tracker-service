@@ -12,7 +12,7 @@ var express = require("express"),
   cookieParser = require("cookie-parser"),
   IbmIdStrategy = require("passport-ibmid-oauth2").Strategy,
   expressSession = require("express-session"),
-  MemoryStore = new expressSession.MemoryStore(),
+  memoryStore = new expressSession.MemoryStore(),
   RedisStore = require("connect-redis")(expressSession),
   _ = require("underscore"),
   crypto = require("crypto"),
@@ -43,7 +43,7 @@ if (!appEnv.isLocal) {
   });
 }
 else {
-  sessionStore = MemoryStore;
+  sessionStore = memoryStore;
 }
 
 //in future PR switch to redis or cloudant as a session store
