@@ -1,0 +1,8 @@
+{
+    "disallowEmptyBlocks": true,
+    "requireParenthesesAroundIIFE": true,
+    "maximumLineLength": 120,
+    "requireCapitalizedConstructors": true,
+    "validateQuoteMarks": "\"",
+    "validateIndentation": 2
+}
