@@ -4,5 +4,6 @@
     "requireParenthesesAroundIIFE": true,
     "maximumLineLength": 120,
     "requireCapitalizedConstructors": true,
-    "validateQuoteMarks": "\""
+    "validateQuoteMarks": "\"",
+    "validateIndentation": 2
 }
