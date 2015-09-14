@@ -1,6 +1,5 @@
 {
     "disallowEmptyBlocks": true,
-    "requireCamelCaseOrUpperCaseIdentifiers": true,
     "requireParenthesesAroundIIFE": true,
     "maximumLineLength": 120,
     "requireCapitalizedConstructors": true,
