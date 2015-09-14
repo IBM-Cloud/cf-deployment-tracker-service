@@ -47,6 +47,10 @@ app.use(passport.session());
 //  app.use(require('express-force-ssl'));
 //}
 
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
+
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
