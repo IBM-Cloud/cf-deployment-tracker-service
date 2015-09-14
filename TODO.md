@@ -6,7 +6,7 @@
  * Data to include in POST
  * Environment variable data used to collect this information
 * ~~Unit tests~~ (complete)
-* Linting
+* ~~Linting~~ (complete)
 * Track deployments to other non-Bluemix platforms
 * ~~Continuous integration~~ (complete)
 * ~~Zero-downtime deployments (https://github.com/18F/cf-blue-green)~~ (complete)
