@@ -16,7 +16,8 @@ var express = require("express"),
   RedisStore = require("connect-redis")(expressSession),
   _ = require("underscore"),
   crypto = require("crypto"),
-  csv = require("express-csv"); // jshint ignore:line
+  csv = require("express-csv"),
+  hbs = require("hbs"); // jshint ignore:line
 
 
 dotenv.load();
@@ -291,6 +292,36 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
   });
 });
 
+// Get badge of metrics for a specific repo
+app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
+  var app = req.app;
+  var deploymentTrackerDb = app.get("deployment-tracker-db");
+
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use("events");
+  var hash = req.param("hash");
+
+  //TODO: Cache this data with Redis
+  eventsDb.view("deployments", "by_repo_hash",
+    {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 1}, function(err, body) {
+    var count = body.rows[0].value;
+    var svgData = {
+      left: "Deployments",
+      right: count.toString(),
+      color: "green"
+    };
+    svgData.leftWidth = svgData.left.length * 9;
+    svgData.rightWidth = svgData.right.length * 18;
+    svgData.totalWidth = svgData.leftWidth + svgData.rightWidth - 12;
+    svgData.leftX = svgData.leftWidth / 2 + 1;
+    svgData.rightX = svgData.leftWidth + svgData.rightWidth / 2.5 - 1;
+    res.set("Content-Type", "image/svg+xml");
+    res.render("badge.xml", svgData);
+  });
+});
+
 function track(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
@@ -356,7 +387,8 @@ app.get("/robots.txt", function (request, response) {
 
 // Set the view engine
 app.set("view engine", "html");
-app.engine("html", require("hbs").__express);
+app.engine("html", hbs.__express);
+app.engine("xml", hbs.__express);
 
 // Serve static assets
 app.use(express.static(path.join(__dirname, "public")));
