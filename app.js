@@ -288,7 +288,8 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
       }
       return 0;
     }).reverse();
-    res.render("repo", {apps: appsSortedByCount});
+    var protocolAndHost = req.protocol + "://" + req.get("host");
+    res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
   });
 });
 
@@ -307,6 +308,7 @@ app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
   eventsDb.view("deployments", "by_repo_hash",
     {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 1}, function(err, body) {
     var count = body.rows[0].value;
+    //TODO: Rename this variable
     var svgData = {
       left: "Deployments",
       right: count.toString(),

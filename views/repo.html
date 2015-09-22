@@ -29,17 +29,56 @@
 {{#each apps}}
       <section>
         <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank" aria-hidden="true">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}}{{#if url_hash}} <a href="/stats/{{url_hash}}"><span class="glyphicon glyphicon-bookmark" aria-hidden="true"></span></a>{{/if}} <span class="badge">{{count}}</span></h2>
-        {{#if url_hash}}<input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">{{/if}}
-        <ul class="list-group">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Deployments by Month</h3>
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
 {{#each this}}
 {{#each this}}
-          <li class="list-group-item">
-            <span class="badge">{{this}}</span>
-            {{@../key}}-{{@key}}
-          </li>
+                  <li class="list-group-item">
+                    <span class="badge">{{this}}</span>
+                    {{@../key}}-{{@key}}
+                  </li>
 {{/each}}
 {{/each}}
-        </ul>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">URL Hash</h3>
+              </div>
+              <div class="panel-body">
+                <input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Deployment Badge</h3>
+              </div>
+              <div class="panel-body">
+                <p><a href="/stats/{{url_hash}}"><img src="/stats/{{url_hash}}/badge.svg" alt="Deployments"></a></p>
+                <p>Embed this badge on the project's README or on related tutorials and blog posts.</p>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="image-url">Image URL:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg" aria-describedby="image-url">
+                </div>
+                <br>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="markdown">Markdown:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="[![Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)]({{../protocolAndHost}}/stats/{{url_hash}})
+" aria-describedby="markdown">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 {{/each}}
     </article>
