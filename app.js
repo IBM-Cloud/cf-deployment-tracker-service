@@ -16,7 +16,6 @@ var express = require("express"),
   RedisStore = require("connect-redis")(expressSession),
   _ = require("underscore"),
   crypto = require("crypto"),
-  csv = require("express-csv"),
   hbs = require("hbs"); // jshint ignore:line
 
 
@@ -215,6 +214,7 @@ app.get("/stats", authenticate(), function(req, res) {
 
 // Get CSV of metrics overview
 app.get("/stats.csv", authenticate(), function(req, res) {
+  require("express-csv");
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
