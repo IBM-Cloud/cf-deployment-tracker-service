@@ -30,6 +30,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.enable("trust proxy");
+
 var sessionStore;
 
 if (!appEnv.isLocal) {
