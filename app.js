@@ -304,7 +304,7 @@ app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
   var eventsDb = deploymentTrackerDb.use("events"),
    hash = req.param("hash");
 
-  //TODO: Cache this data with Redis
+  //TODO: Consider caching this data with Redis
   eventsDb.view("deployments", "by_repo_hash",
     {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 1}, function(err, body) {
     var count = body.rows[0].value;
