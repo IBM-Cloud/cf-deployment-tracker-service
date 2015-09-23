@@ -16,7 +16,8 @@ var express = require("express"),
   RedisStore = require("connect-redis")(expressSession),
   _ = require("underscore"),
   crypto = require("crypto"),
-  csv = require("express-csv"); // jshint ignore:line
+  csv = require("express-csv"), // jshint ignore:line
+  hbs = require("hbs");
 
 
 dotenv.load();
@@ -287,7 +288,38 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
       }
       return 0;
     }).reverse();
-    res.render("repo", {apps: appsSortedByCount});
+    var protocolAndHost = req.protocol + "://" + req.get("host");
+    res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
+  });
+});
+
+// Get badge of metrics for a specific repo
+app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
+  var app = req.app,
+    deploymentTrackerDb = app.get("deployment-tracker-db");
+
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use("events"),
+   hash = req.param("hash");
+
+  //TODO: Consider caching this data with Redis
+  eventsDb.view("deployments", "by_repo_hash",
+    {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 1}, function(err, body) {
+    var count = body.rows[0].value;
+    //TODO: Rename this variable
+    var svgData = {
+      left: "Bluemix Deployments",
+      right: count.toString(),
+    };
+    svgData.leftWidth = svgData.left.length * 6.5 + 10;
+    svgData.rightWidth = svgData.right.length * 7.5 + 10;
+    svgData.totalWidth = svgData.leftWidth + svgData.rightWidth;
+    svgData.leftX = svgData.leftWidth / 2 + 1;
+    svgData.rightX = svgData.leftWidth + svgData.rightWidth / 2 - 1;
+    res.set("Content-Type", "image/svg+xml");
+    res.render("badge.xml", svgData);
   });
 });
 
@@ -356,7 +388,8 @@ app.get("/robots.txt", function (request, response) {
 
 // Set the view engine
 app.set("view engine", "html");
-app.engine("html", require("hbs").__express);
+app.engine("html", hbs.__express);
+app.engine("xml", hbs.__express);
 
 // Serve static assets
 app.use(express.static(path.join(__dirname, "public")));
