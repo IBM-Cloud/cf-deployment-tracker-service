@@ -310,15 +310,14 @@ app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
     var count = body.rows[0].value;
     //TODO: Rename this variable
     var svgData = {
-      left: "Deployments",
+      left: "Bluemix Deployments",
       right: count.toString(),
-      color: "green"
     };
-    svgData.leftWidth = svgData.left.length * 9;
-    svgData.rightWidth = svgData.right.length * 18;
-    svgData.totalWidth = svgData.leftWidth + svgData.rightWidth - 12;
+    svgData.leftWidth = svgData.left.length * 6.5 + 10;
+    svgData.rightWidth = svgData.right.length * 7.5 + 10;
+    svgData.totalWidth = svgData.leftWidth + svgData.rightWidth;
     svgData.leftX = svgData.leftWidth / 2 + 1;
-    svgData.rightX = svgData.leftWidth + svgData.rightWidth / 2.5 - 1;
+    svgData.rightX = svgData.leftWidth + svgData.rightWidth / 2 - 1;
     res.set("Content-Type", "image/svg+xml");
     res.render("badge.xml", svgData);
   });
