@@ -16,7 +16,8 @@ var express = require("express"),
   RedisStore = require("connect-redis")(expressSession),
   _ = require("underscore"),
   crypto = require("crypto"),
-  hbs = require("hbs"); // jshint ignore:line
+  csv = require("express-csv"), // jshint ignore:line
+  hbs = require("hbs");
 
 
 dotenv.load();
@@ -214,7 +215,6 @@ app.get("/stats", authenticate(), function(req, res) {
 
 // Get CSV of metrics overview
 app.get("/stats.csv", authenticate(), function(req, res) {
-  require("express-csv");
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
