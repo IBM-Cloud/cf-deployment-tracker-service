@@ -296,7 +296,7 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
 });
 
 // Get badge of metrics for a specific repo
-app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
+app.get("/stats/:hash/badge.svg", function(req, res) {
   var app = req.app,
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
