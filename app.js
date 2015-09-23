@@ -301,8 +301,8 @@ app.get("/stats/:hash/badge.svg", authenticate(), function(req, res) {
   if (!deploymentTrackerDb) {
     return res.status(500);
   }
-  var eventsDb = deploymentTrackerDb.use("events");
-  var hash = req.param("hash");
+  var eventsDb = deploymentTrackerDb.use("events"),
+   hash = req.param("hash");
 
   //TODO: Cache this data with Redis
   eventsDb.view("deployments", "by_repo_hash",
