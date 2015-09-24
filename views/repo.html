@@ -5,16 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Deployment Tracker</title>
-    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/dist/css/bootstrap-theme.min.css">
     <style>
       .copy {
         cursor: pointer;
       }
     </style>
     <!--[if lt IE 9]>
-      <script src="/html5shiv/dist/html5shiv.min.js"></script>
-      <script src="/respond/dest/respond.min.js"></script>
+      <script src="/assets/html5shiv/dist/html5shiv.min.js"></script>
+      <script src="/assets/respond/dest/respond.min.js"></script>
     <![endif]-->
   </head>
   <body>
@@ -82,10 +82,9 @@
                     <span class="glyphicon glyphicon-copy" data-clipboard-text="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg"></span>
                   </span>
                 </div>
-                </div>
                 <br>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-addon">Markdown:</span>
+                  <span class="input-group-addon" id="markdown">Markdown:</span>
                   <input type="text" class="form-control" readonly="readonly" value="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)
 " aria-describedby="markdown" />
                   <span class="input-group-addon copy">
@@ -99,9 +98,9 @@
       </section>
 {{/each}}
     </article>
-    <script src="/jquery/dist/jquery.min.js"></script>
-    <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/zeroclipboard/dist/ZeroClipboard.min.js"></script>
+    <script src="/assets/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/assets/zeroclipboard/dist/ZeroClipboard.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
         var client = new ZeroClipboard($(".copy span"));
