@@ -4,7 +4,7 @@
   "description": "Tracks deployments of sample applications",
   "main": "app.js",
   "scripts": {
-    "postinstall": "./admin.js track && ./admin.js db put && ./admin.js ddoc put && ./admin.js clean repository_url_hash",
+    "postinstall": "bower install --allow-root && ./admin.js track && ./admin.js db put && ./admin.js ddoc put && ./admin.js clean repository_url_hash",
     "start": "node app.js",
     "test": "grunt"
   },
@@ -31,6 +31,7 @@
   "homepage": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service",
   "dependencies": {
     "body-parser": "^1.12.3",
+    "bower": "^1.5.2",
     "cf-deployment-tracker-client": "0.0.7",
     "cfenv": "*",
     "cloudant": "^1.0.0-beta3",

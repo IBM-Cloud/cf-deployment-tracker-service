@@ -1,0 +1,16 @@
+{
+  "name": "cf-deployment-tracker-service",
+  "version": "1.0.0",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "bootstrap": "*",
+    "jquery": "*",
+    "html5shiv": "*",
+    "respond": "*"
+  }
+}
