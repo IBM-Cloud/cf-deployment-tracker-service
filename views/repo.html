@@ -62,7 +62,7 @@
               <div class="panel-body">
                 <div class="input-group">
                   <input type="text" class="form-control" readonly="readonly" value="{{url_hash}}" />
-                  <span class="input-group-addon copy">
+                  <span class="input-group-addon copy" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Copy to clipboard">
                     <span class="glyphicon glyphicon-copy" data-clipboard-text="{{url_hash}}"></span>
                   </span>
                 </div>
@@ -78,7 +78,7 @@
                 <div class="input-group input-group-sm">
                   <span class="input-group-addon" id="image-url">Image URL:</span>
                   <input type="text" class="form-control" readonly="readonly" value="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg" aria-describedby="image-url" />
-                  <span class="input-group-addon copy">
+                  <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
                     <span class="glyphicon glyphicon-copy" data-clipboard-text="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg"></span>
                   </span>
                 </div>
@@ -87,7 +87,7 @@
                   <span class="input-group-addon" id="markdown">Markdown:</span>
                   <input type="text" class="form-control" readonly="readonly" value="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)
 " aria-describedby="markdown" />
-                  <span class="input-group-addon copy">
+                  <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
                     <span class="glyphicon glyphicon-copy" data-clipboard-text="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)"></span>
                   </span>
                 </div>
@@ -104,6 +104,10 @@
     <script type="text/javascript">
       $(document).ready(function() {
         var client = new ZeroClipboard($(".copy span"));
+        client.on('aftercopy', function (event) {
+          $(event.target.parentNode).attr("title", "Copied!").tooltip("fixTitle").tooltip("show");
+        });
+        $("[data-toggle='tooltip']").tooltip();
       });
     </script>
   </body>
