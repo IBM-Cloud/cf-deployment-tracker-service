@@ -12,6 +12,6 @@
     "jquery": "*",
     "html5shiv": "*",
     "respond": "*",
-    "zeroclipboard": "~2.2.0"
+    "zeroclipboard": "*"
   }
 }
