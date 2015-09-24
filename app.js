@@ -248,7 +248,7 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
     return res.status(500);
   }
   var eventsDb = deploymentTrackerDb.use("events");
-  var hash = req.param("hash");
+  var hash = req.params.hash;
 
   eventsDb.view("deployments", "by_repo_hash",
     {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
@@ -304,7 +304,7 @@ app.get("/stats/:hash/badge.svg", function(req, res) {
     return res.status(500);
   }
   var eventsDb = deploymentTrackerDb.use("events"),
-   hash = req.param("hash");
+   hash = req.params.hash;
 
   //TODO: Consider caching this data with Redis
   eventsDb.view("deployments", "by_repo_hash",
