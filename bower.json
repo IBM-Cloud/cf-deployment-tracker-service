@@ -11,6 +11,7 @@
     "bootstrap": "*",
     "jquery": "*",
     "html5shiv": "*",
-    "respond": "*"
+    "respond": "*",
+    "zeroclipboard": "~2.2.0"
   }
 }

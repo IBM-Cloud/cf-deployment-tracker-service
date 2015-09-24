@@ -7,6 +7,11 @@
     <title>Deployment Tracker</title>
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap-theme.min.css">
+    <style>
+      .copy {
+        cursor: pointer;
+      }
+    </style>
     <!--[if lt IE 9]>
       <script src="/html5shiv/dist/html5shiv.min.js"></script>
       <script src="/respond/dest/respond.min.js"></script>
@@ -55,7 +60,12 @@
                 <h3 class="panel-title">URL Hash</h3>
               </div>
               <div class="panel-body">
-                <input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">
+                <div class="input-group">
+                  <input type="text" class="form-control" readonly="readonly" value="{{url_hash}}" />
+                  <span class="input-group-addon copy">
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{url_hash}}"></span>
+                  </span>
+                </div>
               </div>
             </div>
             <div class="panel panel-default">
@@ -67,13 +77,20 @@
                 <p>Embed this badge on the project's README or on related tutorials and blog posts.</p>
                 <div class="input-group input-group-sm">
                   <span class="input-group-addon" id="image-url">Image URL:</span>
-                  <input type="text" class="form-control" readonly="readonly" value="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg" aria-describedby="image-url">
+                  <input type="text" class="form-control" readonly="readonly" value="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg" aria-describedby="image-url" />
+                  <span class="input-group-addon copy">
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg"></span>
+                  </span>
+                </div>
                 </div>
                 <br>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-addon" id="markdown">Markdown:</span>
+                  <span class="input-group-addon">Markdown:</span>
                   <input type="text" class="form-control" readonly="readonly" value="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)
-" aria-describedby="markdown">
+" aria-describedby="markdown" />
+                  <span class="input-group-addon copy">
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)"></span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -84,5 +101,11 @@
     </article>
     <script src="/jquery/dist/jquery.min.js"></script>
     <script src="/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/zeroclipboard/dist/ZeroClipboard.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var client = new ZeroClipboard($(".copy span"));
+      });
+    </script>
   </body>
 </html>
