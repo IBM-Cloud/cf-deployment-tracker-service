@@ -1,0 +1,17 @@
+{
+  "name": "cf-deployment-tracker-service",
+  "version": "1.0.0",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "public/assets"
+  ],
+  "dependencies": {
+    "bootstrap": "*",
+    "jquery": "*",
+    "html5shiv": "*",
+    "respond": "*",
+    "zeroclipboard": "*"
+  }
+}
