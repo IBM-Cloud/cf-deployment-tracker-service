@@ -252,7 +252,8 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
 
   eventsDb.view("deployments", "by_repo_hash",
     {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 4}, function(err, body) {
-    var apps = {};
+    var apps = {},
+      protocolAndHost = req.protocol + "://" + req.get("host");
     body.rows.map(function(row) {
       var hash = row.key[0];
       var url = row.key[1];
@@ -265,6 +266,8 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
         };
         if (hash) {
           apps[url].url_hash = hash;
+          apps[url].imageUrl = protocolAndHost + "/stats/" + apps[url].url_hash + "/badge.svg";
+          apps[url].markdown = "![Bluemix Deployments](" + apps[url].imageUrl + ")";
         }
       }
       if (validator.isURL(url, {protocols: ["http","https"], require_protocol: true})) {
@@ -290,7 +293,6 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
       }
       return 0;
     }).reverse();
-    var protocolAndHost = req.protocol + "://" + req.get("host");
     res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
   });
 });

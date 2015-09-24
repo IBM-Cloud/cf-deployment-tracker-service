@@ -73,22 +73,22 @@
                 <h3 class="panel-title">Deployment Badge</h3>
               </div>
               <div class="panel-body">
-                <p><img src="/stats/{{url_hash}}/badge.svg" alt="Deployments"></p>
+                <p><img src="{{imageUrl}}" alt="Deployments" title=""></p>
                 <p>Embed this badge on the project's README or on related tutorials and blog posts.</p>
                 <div class="input-group input-group-sm">
                   <span class="input-group-addon" id="image-url">Image URL:</span>
-                  <input type="text" class="form-control" readonly="readonly" value="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg" aria-describedby="image-url" />
+                  <input type="text" class="form-control" readonly="readonly" value="{{imageUrl}}" aria-describedby="image-url" />
                   <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
-                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{../protocolAndHost}}/stats/{{url_hash}}/badge.svg"></span>
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{imageUrl}}"></span>
                   </span>
                 </div>
                 <br>
                 <div class="input-group input-group-sm">
                   <span class="input-group-addon" id="markdown">Markdown:</span>
-                  <input type="text" class="form-control" readonly="readonly" value="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)
+                  <input type="text" class="form-control" readonly="readonly" value="{{markdown}}
 " aria-describedby="markdown" />
                   <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
-                    <span class="glyphicon glyphicon-copy" data-clipboard-text="![Bluemix Deployments]({{../protocolAndHost}}/stats/{{url_hash}}/badge.svg)"></span>
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{markdown}}"></span>
                   </span>
                 </div>
               </div>
