@@ -32,7 +32,7 @@ app.use(cookieParser());
 
 app.enable("trust proxy");
 
-app.use(express.static(__dirname + '/bower_components'));
+app.use(express.static(__dirname + "/bower_components"));
 
 var sessionStore;
 
