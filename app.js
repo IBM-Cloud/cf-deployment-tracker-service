@@ -327,6 +327,40 @@ app.get("/stats/:hash/badge.svg", function(req, res) {
   });
 });
 
+// Get a "Deploy to Bluemix" button for a specific repo
+app.get("/stats/:hash/button.svg", function(req, res) {
+  var app = req.app,
+    deploymentTrackerDb = app.get("deployment-tracker-db");
+
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use("events"),
+   hash = req.params.hash;
+
+  //TODO: Consider caching this data with Redis
+  eventsDb.view("deployments", "by_repo_hash",
+    {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 1}, function(err, body) {
+    var count = body.rows[0].value;
+    //TODO: Rename this variable
+    var svgData = {
+      left: "Deploy to Bluemix",
+      right: count.toString(),
+    };
+    svgData.leftWidth = svgData.left.length * 11 + 20;
+    svgData.rightWidth = svgData.right.length * 12 + 16;
+    svgData.totalWidth = svgData.leftWidth + svgData.rightWidth;
+    svgData.leftX = svgData.leftWidth / 2 + 1;
+    svgData.rightX = svgData.leftWidth + svgData.rightWidth / 2 - 1;
+    svgData.leftWidth = svgData.leftWidth + 48;
+    svgData.totalWidth = svgData.totalWidth + 48;
+    svgData.leftX = svgData.leftX + 48;
+    svgData.rightX = svgData.rightX + 48;
+    res.set("Content-Type", "image/svg+xml");
+    res.render("button.xml", svgData);
+  });
+});
+
 function track(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
