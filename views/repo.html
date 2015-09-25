@@ -73,21 +73,53 @@
                 <h3 class="panel-title">Deployment Badge</h3>
               </div>
               <div class="panel-body">
-                <p><img src="{{imageUrl}}" alt="Deployments"></p>
+                <p><img src="{{badgeImageUrl}}" alt="Deployments"></p>
                 <p>Embed this badge on the project's README or on related tutorials and blog posts.</p>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-addon" id="image-url">Image URL:</span>
-                  <input type="text" class="form-control" readonly="readonly" value="{{imageUrl}}" aria-describedby="image-url" />
+                  <span class="input-group-addon" id="badge-image-url">Image URL:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="{{badgeImageUrl}}" aria-describedby="badge-image-url" />
                   <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
-                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{imageUrl}}"></span>
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{badgeImageUrl}}"></span>
                   </span>
                 </div>
                 <br>
                 <div class="input-group input-group-sm">
-                  <span class="input-group-addon" id="markdown">Markdown:</span>
-                  <input type="text" class="form-control" readonly="readonly" value="{{markdown}}" aria-describedby="markdown" />
+                  <span class="input-group-addon" id="badge-markdown">Markdown:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="{{badgeMarkdown}}" aria-describedby="badge-markdown" />
                   <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
-                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{markdown}}"></span>
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{badgeMarkdown}}"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Deploy to Bluemix Button</h3>
+              </div>
+              <div class="panel-body">
+                <p><a href="{{buttonLinkUrl}}"><img src="{{buttonImageUrl}}" alt="Deploy to Bluemix"></a></p>
+                <p>Embed this Deploy to Bluemix button on the project's README or on related tutorials and blog posts.</p>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="button-image-url">Image URL:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="{{buttonImageUrl}}" aria-describedby="button-image-url" />
+                  <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{buttonImageUrl}}"></span>
+                  </span>
+                </div>
+                <br>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="button-link-url">Link URL:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="{{buttonLinkUrl}}" aria-describedby="button-link-url" />
+                  <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{buttonLinkUrl}}"></span>
+                  </span>
+                </div>
+                <br>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="button-markdown">Markdown:</span>
+                  <input type="text" class="form-control" readonly="readonly" value="{{buttonMarkdown}}" aria-describedby="button-markdown" />
+                  <span class="input-group-addon copy" data-toggle="tooltip" data-placement="top" title="" data-original-title="Copy to clipboard">
+                    <span class="glyphicon glyphicon-copy" data-clipboard-text="{{buttonMarkdown}}"></span>
                   </span>
                 </div>
               </div>
