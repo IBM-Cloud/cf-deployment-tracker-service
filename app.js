@@ -266,8 +266,11 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
         };
         if (hash) {
           apps[url].url_hash = hash;
-          apps[url].imageUrl = protocolAndHost + "/stats/" + apps[url].url_hash + "/badge.svg";
-          apps[url].markdown = "![Bluemix Deployments](" + apps[url].imageUrl + ")";
+          apps[url].badgeImageUrl = protocolAndHost + "/stats/" + apps[url].url_hash + "/badge.svg";
+          apps[url].badgeMarkdown = "![Bluemix Deployments](" + apps[url].badgeImageUrl + ")";
+          apps[url].buttonImageUrl = protocolAndHost + "/stats/" + apps[url].url_hash + "/button.svg";
+          apps[url].buttonLinkUrl = "https://bluemix.net/deploy?repository=" + url;
+          apps[url].buttonMarkdown = "[![Deploy to Bluemix](" + apps[url].buttonImageUrl + ")](" + apps[url].buttonLinkUrl + ")";
         }
       }
       if (validator.isURL(url, {protocols: ["http","https"], require_protocol: true})) {
