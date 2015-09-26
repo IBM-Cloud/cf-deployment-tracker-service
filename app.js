@@ -29,7 +29,7 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-pp.use(require("express-force-ssl"));
+app.use(require("express-force-ssl"));
 
 app.enable("trust proxy");
 
