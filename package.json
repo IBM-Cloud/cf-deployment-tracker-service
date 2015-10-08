@@ -45,7 +45,7 @@
     "express-session": "*",
     "hbs": "^3.0.1",
     "http-post": "^0.1.1",
-    "passport": "0.3.0",
+    "passport": "0.2.2",
     "passport-ibmid-oauth2": "*",
     "passport-oauth": "1.0.0",
     "underscore": "*",
