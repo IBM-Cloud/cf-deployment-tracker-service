@@ -75,7 +75,7 @@ function authenticate() {
     }
 
     console.log(request.session.ibmid);
-    var emaisl = request.session.ibmid.profile.email;
+    var emails = request.session.ibmid.profile.email;
 
     var ibmer = false;
     _.each(emails, function (email) {
