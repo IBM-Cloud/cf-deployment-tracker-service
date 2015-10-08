@@ -75,10 +75,10 @@ function authenticate() {
     }
 
     console.log(request.session.ibmid);
-    var email = request.session.ibmid.profile.email;
+    var emaisl = request.session.ibmid.profile.email;
 
     var ibmer = false;
-    _.each(email, function (email) {
+    _.each(emails, function (email) {
       if (email.toLowerCase().endsWith(".ibm.com")) {
         ibmer = true;
       }
