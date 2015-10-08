@@ -79,7 +79,7 @@ function authenticate() {
 
     var ibmer = false;
     _.each(email, function (email) {
-      if (email.toLowerCase().endsWith("ibm.com")) {
+      if (email.toLowerCase().endsWith(".ibm.com")) {
         ibmer = true;
       }
     });
@@ -87,7 +87,7 @@ function authenticate() {
       response.render("error", {message: "You must be an IBM'er to use this app"});
     }
     return next();
-  }
+  };
 }
 
 passport.serializeUser(function(user, done) {
