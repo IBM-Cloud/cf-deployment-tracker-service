@@ -75,28 +75,18 @@ function authenticate() {
     }
 
     console.log(request.session.ibmid);
-    var verifiedEmail = request.session.ibmid.profile["idaas.verified_email"];
+    var email = request.session.ibmid.profile.email;
 
-    if (request.isAuthenticated() && (verifiedEmail === undefined || verifiedEmail.length < 1)) {
-      response.render("error", {message: "You must have a verified email to use this app. " +
-        "Please goto <a href='https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp'>" +
-        "https://idaas.ng.bluemix.net/idaas/protected/manageprofile.jsp</a>" +
-        "  Then goto <a href=" + appEnv.url + "/auth/ibmid>" + appEnv.url + "/auth/ibmid</a>" +
-        " to login again to pick up you verified email"});
-      return next();
-    }
-    else {
-      var ibmer = false;
-      _.each(verifiedEmail, function (email) {
-        if (email.toLowerCase().endsWith("ibm.com")) {
-          ibmer = true;
-        }
-      });
-      if (ibmer === false) {
-        response.render("error", {message: "You must be an IBM'er to use this app"});
+    var ibmer = false;
+    _.each(email, function (email) {
+      if (email.toLowerCase().endsWith(".ibm.com")) {
+        ibmer = true;
       }
-      return next();
+    });
+    if (ibmer === false) {
+      response.render("error", {message: "You must be an IBM'er to use this app"});
     }
+    return next();
   };
 }
 
