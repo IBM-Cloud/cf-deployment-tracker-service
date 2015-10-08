@@ -10,3 +10,5 @@ applications:
   random-route: true
   services:
   - deployment-tracker-db
+  - deployment-tracker-logs
+  - deployment-tracker-redis
