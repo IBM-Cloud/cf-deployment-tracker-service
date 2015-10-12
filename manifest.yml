@@ -11,4 +11,4 @@ applications:
   services:
   - deployment-tracker-db
   - deployment-tracker-logs
-  - deployment-tracker-redis
+  - deployment-tracker-redis-redis-cloud
