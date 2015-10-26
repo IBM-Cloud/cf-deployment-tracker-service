@@ -3,6 +3,9 @@ declared-services:
   deployment-tracker-db:
     label: cloudantNoSQLDB
     plan: Shared
+  deployment-tracker-redis-redis-cloud:
+    label: rediscloud
+    plan: 30mb
 applications:
 - name: deployment-tracker
   memory: 256M
@@ -10,5 +13,4 @@ applications:
   random-route: true
   services:
   - deployment-tracker-db
-  - deployment-tracker-logs
   - deployment-tracker-redis-redis-cloud
