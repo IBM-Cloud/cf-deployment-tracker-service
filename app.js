@@ -17,7 +17,8 @@ var express = require("express"),
   _ = require("underscore"),
   crypto = require("crypto"),
   csv = require("express-csv"), // jshint ignore:line
-  hbs = require("hbs");
+  hbs = require("hbs"),
+  forceSSL = require("express-force-ssl");
 
 
 dotenv.load();
@@ -29,14 +30,12 @@ var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(require("express-force-ssl"));
 
 app.enable("trust proxy");
 
 var sessionStore;
 
 if (!appEnv.isLocal) {
-  //  app.use(require('express-force-ssl'));
   var redisService = appEnv.getService(new RegExp(".*" + "deployment-tracker-redis" +".*", "i"));
 
   sessionStore = new RedisStore({
@@ -103,7 +102,7 @@ var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || " ");
 passport.use("ibmid", new IbmIdStrategy({
   clientID: SSO_CLIENT_ID,
   clientSecret: SSO_CLIENT_SECRET,
-  callbackURL: "https://deployment-tracker.mybluemix.net" + "/auth/ibmid/callback",
+  callbackURL: "https://deployment-tracker-dev.mybluemix.net" + "/auth/ibmid/callback",
   passReqToCallback: true
 },
   function(req, accessToken, refreshToken, profile, done) {
@@ -114,17 +113,17 @@ passport.use("ibmid", new IbmIdStrategy({
   }
 ));
 
-app.get("/auth/ibmid", passport.authenticate("ibmid", { scope: ["profile"] }), function (request, response) {
+app.get("/auth/ibmid", [forceSSL, passport.authenticate("ibmid", { scope: ["profile"] })], function (request, response) {
   request = request;
   response = response;
 });
 
-app.get("/auth/ibmid/callback", passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] }),
+app.get("/auth/ibmid/callback", [forceSSL, passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] })],
   function(req, res) {
   res.redirect("/stats");
 });
 
-app.get("/logout", function (request, response) {
+app.get("/logout", forceSSL ,function (request, response) {
   passport._strategy("ibmid").logout(request, response, appEnv.url);
 });
 
@@ -150,12 +149,12 @@ var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
 
 
 
-app.get("/", function(req, res) {
+app.get("/", forceSSL, function(req, res) {
   res.render("index");
 });
 
 // Get metrics overview
-app.get("/stats", authenticate(), function(req, res) {
+app.get("/stats", [forceSSL, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
@@ -206,7 +205,7 @@ app.get("/stats", authenticate(), function(req, res) {
 });
 
 // Get CSV of metrics overview
-app.get("/stats.csv", authenticate(), function(req, res) {
+app.get("/stats.csv", [forceSSL, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
@@ -229,7 +228,7 @@ app.get("/stats.csv", authenticate(), function(req, res) {
 });
 
 // Get metrics for a specific repo
-app.get("/stats/:hash", authenticate(), function(req, res) {
+app.get("/stats/:hash", [forceSSL, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   var appsSortedByCount = [];
@@ -304,7 +303,7 @@ app.get("/stats/:hash", authenticate(), function(req, res) {
 });
 
 // Get badge of metrics for a specific repo
-app.get("/stats/:hash/badge.svg", function(req, res) {
+app.get("/stats/:hash/badge.svg", forceSSL, function(req, res) {
   var app = req.app,
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
@@ -334,7 +333,7 @@ app.get("/stats/:hash/badge.svg", function(req, res) {
 });
 
 // Get a "Deploy to Bluemix" button for a specific repo
-app.get("/stats/:hash/button.svg", function(req, res) {
+app.get("/stats/:hash/button.svg", forceSSL, function(req, res) {
   var app = req.app,
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
@@ -417,7 +416,7 @@ app.post("/", urlEncodedParser, track);
 
 app.post("/api/v1/track", jsonParser, track);
 
-app.get("/api/v1/whoami", authenticate(), function (request, response) {
+app.get("/api/v1/whoami", [forceSSL, authenticate()], function (request, response) {
   response.send(request.session.ibmid);
 });
 
