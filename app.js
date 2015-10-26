@@ -113,12 +113,14 @@ passport.use("ibmid", new IbmIdStrategy({
   }
 ));
 
-app.get("/auth/ibmid", [forceSSL, passport.authenticate("ibmid", { scope: ["profile"] })], function (request, response) {
+app.get("/auth/ibmid", [forceSSL, passport.authenticate("ibmid", { scope: ["profile"] })],
+  function (request, response) {
   request = request;
   response = response;
 });
 
-app.get("/auth/ibmid/callback", [forceSSL, passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] })],
+app.get("/auth/ibmid/callback", [forceSSL,
+  passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] })],
   function(req, res) {
   res.redirect("/stats");
 });
