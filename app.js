@@ -304,6 +304,28 @@ app.get("/stats/:hash", [forceSSL, authenticate()], function(req, res) {
   });
 });
 
+// Public API to get metrics for a specific repo
+app.get("/stats/:hash/metrics.json", forceSSL, function(req, res) {
+  var app = req.app,
+    deploymentTrackerDb = app.get("deployment-tracker-db");
+
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use("events"),
+   hash = req.params.hash;
+
+  //TODO: Consider caching this data with Redis
+  eventsDb.view("deployments", "by_repo_hash",
+    {startkey: [hash], endkey: [hash, {}, {}, {}, {}, {}, {}], group_level: 1}, function(err, body) {
+    var appStats = {
+      url_hash: hash,
+      count: body.rows[0].value
+    };
+    res.json(appStats);
+  });
+});
+
 // Get badge of metrics for a specific repo
 app.get("/stats/:hash/badge.svg", forceSSL, function(req, res) {
   var app = req.app,
