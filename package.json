@@ -47,7 +47,7 @@
     "http-post": "0.1.1",
     "node-uuid": "1.4.3",
     "passport": "0.2.2",
-    "passport-ibmid-oauth2": "0.0.4",
+    "passport-ibmid-oauth2": "0.0.8",
     "passport-oauth": "1.0.0",
     "underscore": "1.8.3",
     "validator": "4.1.0"
