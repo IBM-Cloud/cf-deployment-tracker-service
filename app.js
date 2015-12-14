@@ -52,7 +52,8 @@ else {
 app.use(expressSession({ secret: process.env.SECRET || "blah",
   store: sessionStore,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  secure: true
 }));
 
 app.use(passport.initialize());
