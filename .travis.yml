@@ -1,7 +1,9 @@
 language: node_js
 node_js:
 - '0.12'
-sudo: true
+sudo: required
+dist: precise
+group: edge
 env:
   global:
   - CF_APP=deployment-tracker
