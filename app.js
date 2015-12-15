@@ -60,7 +60,7 @@ app.use(expressSession({ secret: process.env.SECRET || "blah",
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  secure: true
+  cookie: { secure: true, path: "/", httpOnly: true }
 }));
 
 app.use(passport.initialize());
