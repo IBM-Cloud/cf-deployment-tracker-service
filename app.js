@@ -25,6 +25,13 @@ dotenv.load();
 
 var appEnv = cfenv.getAppEnv();
 
+var forceSslIfNotLocal = function(req, res, next) {
+  if (appEnv.isLocal) {
+    return next();
+  }
+  forceSSL(req, res, next);
+};
+
 var app = express();
 
 app.use(bodyParser.json());
@@ -114,19 +121,19 @@ passport.use("ibmid", new IbmIdStrategy({
   }
 ));
 
-app.get("/auth/ibmid", [forceSSL, passport.authenticate("ibmid", { scope: ["profile"] })],
+app.get("/auth/ibmid", [forceSslIfNotLocal, passport.authenticate("ibmid", { scope: ["profile"] })],
   function (request, response) {
   request = request;
   response = response;
 });
 
-app.get("/auth/ibmid/callback", [forceSSL,
+app.get("/auth/ibmid/callback", [forceSslIfNotLocal,
   passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] })],
   function(req, res) {
   res.redirect("/stats");
 });
 
-app.get("/logout", forceSSL ,function (request, response) {
+app.get("/logout", forceSslIfNotLocal ,function (request, response) {
   passport._strategy("ibmid").logout(request, response, appEnv.url);
 });
 
@@ -152,12 +159,12 @@ var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
 
 
 
-app.get("/", forceSSL, function(req, res) {
+app.get("/", forceSslIfNotLocal, function(req, res) {
   res.render("index");
 });
 
 // Get metrics overview
-app.get("/stats", [forceSSL, authenticate()], function(req, res) {
+app.get("/stats", [forceSslIfNotLocal, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
@@ -208,7 +215,7 @@ app.get("/stats", [forceSSL, authenticate()], function(req, res) {
 });
 
 // Get CSV of metrics overview
-app.get("/stats.csv", [forceSSL, authenticate()], function(req, res) {
+app.get("/stats.csv", [forceSslIfNotLocal, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
@@ -231,7 +238,7 @@ app.get("/stats.csv", [forceSSL, authenticate()], function(req, res) {
 });
 
 // Get metrics for a specific repo
-app.get("/stats/:hash", [forceSSL, authenticate()], function(req, res) {
+app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   var appsSortedByCount = [];
@@ -306,7 +313,7 @@ app.get("/stats/:hash", [forceSSL, authenticate()], function(req, res) {
 });
 
 // Public API to get metrics for a specific repo
-app.get("/stats/:hash/metrics.json", forceSSL, function(req, res) {
+app.get("/stats/:hash/metrics.json", forceSslIfNotLocal, function(req, res) {
   var app = req.app,
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
@@ -328,7 +335,7 @@ app.get("/stats/:hash/metrics.json", forceSSL, function(req, res) {
 });
 
 // Get badge of metrics for a specific repo
-app.get("/stats/:hash/badge.svg", forceSSL, function(req, res) {
+app.get("/stats/:hash/badge.svg", forceSslIfNotLocal, function(req, res) {
   var app = req.app,
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
@@ -358,7 +365,7 @@ app.get("/stats/:hash/badge.svg", forceSSL, function(req, res) {
 });
 
 // Get a "Deploy to Bluemix" button for a specific repo
-app.get("/stats/:hash/button.svg", forceSSL, function(req, res) {
+app.get("/stats/:hash/button.svg", forceSslIfNotLocal, function(req, res) {
   var app = req.app,
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
@@ -441,7 +448,7 @@ app.post("/", urlEncodedParser, track);
 
 app.post("/api/v1/track", jsonParser, track);
 
-app.get("/api/v1/whoami", [forceSSL, authenticate()], function (request, response) {
+app.get("/api/v1/whoami", [forceSslIfNotLocal, authenticate()], function (request, response) {
   response.send(request.session.ibmid);
 });
 
