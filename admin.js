@@ -97,7 +97,8 @@ program
           _id: "_design/deployments",
           views: {
             by_repo: {
-              map: "function(doc) { if (doc.repository_url && doc.repository_url !== '') { emit([doc.repository_url, doc.date_received.substring(0, 4), " +
+              map: "function(doc) { if (doc.repository_url && doc.repository_url !== '') { " +
+                "emit([doc.repository_url, doc.date_received.substring(0, 4), " +
                 "doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, " +
                 "doc.application_version]); } }",
               reduce: "_count",
