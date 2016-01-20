@@ -26,22 +26,38 @@
       </ol>
       <h2>Application Deployments by Repository</h2>
       <p><a class="btn btn-default" href="/stats.csv" role="button">Download as CSV <span class="glyphicon glyphicon-download" aria-hidden="true"></span></a></p>
-{{#each apps}}
+      {{#each apps}}
       <section>
-        <h2>{{#if url}}{{#if is_url}}<a href="{{url}}" target="_blank">{{url}}</a>{{else}}{{url}}{{/if}}{{else}}<em>No repository URL</em>{{/if}}{{#if url_hash}} <a href="/stats/{{url_hash}}"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></a>{{/if}} <span class="badge">{{count}}</span></h2>
+        <h2>
+          {{#if url}}
+            {{#if is_url}}
+              <a href="{{url}}" target="_blank">{{url}}</a>
+              {{else}}{{url}}
+            {{/if}}
+          {{else}}
+            <em>No repository URL</em>
+          {{/if}}
+
+          {{#if url_hash}}
+            <a href="/stats/{{url_hash}}">
+              <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+            </a>
+          {{/if}}
+          <span class="badge">{{count}}</span>
+        </h2>
         {{#if url_hash}}<input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">{{/if}}
         <ul class="list-group">
-{{#each this}}
-{{#each this}}
+          {{#each this}}
+          {{#each this}}
           <li class="list-group-item">
             <span class="badge">{{this}}</span>
             {{@../key}}-{{@key}}
           </li>
-{{/each}}
-{{/each}}
+          {{/each}}
+          {{/each}}
         </ul>
       </section>
-{{/each}}
+    {{/each}}
     </article>
     <script src="/assets/jquery/dist/jquery.min.js"></script>
     <script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
