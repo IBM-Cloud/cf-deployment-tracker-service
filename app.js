@@ -63,6 +63,8 @@ app.use(expressSession({ secret: process.env.SECRET || "blah",
   cookie: { secure: true, path: "/", httpOnly: true }
 }));
 
+var API_KEY = process.env.API_KEY || "blah";
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -92,6 +94,25 @@ function authenticate() {
     if (ibmer === false) {
       response.render("error", {message: "You must be an IBM'er to use this app"});
     }
+    return next();
+  };
+}
+
+function checkAPIKey() {
+  return function(request, response, next) {
+    if (appEnv.isLocal) {
+      return next();
+    }
+
+    if (request.query.apiKey === undefined) {
+      response.status(403);
+      response.json({"error": "A query string parameter apiKey must be set"});
+    }
+    else if (request.query.apiKey !== API_KEY) {
+      response.status(403);
+      response.json({"error": "Invalid api key"});
+    }
+
     return next();
   };
 }
@@ -238,12 +259,14 @@ app.get("/stats.csv", [forceSslIfNotLocal, authenticate()], function(req, res) {
 });
 
 // Get JSON of metrics overview
-app.get("/repos", [forceSslIfNotLocal, authenticate()], function(req, res) {
+app.get("/repos", [forceSslIfNotLocal, checkAPIKey()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
+
   if (!deploymentTrackerDb) {
     return res.status(500);
   }
+
   var eventsDb = deploymentTrackerDb.use("events");
   eventsDb.view("deployments", "by_repo", {group_level: 3}, function(err, body) {
     var apps = [];
