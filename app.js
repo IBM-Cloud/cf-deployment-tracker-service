@@ -237,6 +237,29 @@ app.get("/stats.csv", [forceSslIfNotLocal, authenticate()], function(req, res) {
   });
 });
 
+// Get JSON of metrics overview
+app.get("/repos", [forceSslIfNotLocal, authenticate()], function(req, res) {
+  var app = req.app;
+  var deploymentTrackerDb = app.get("deployment-tracker-db");
+  if (!deploymentTrackerDb) {
+    return res.status(500);
+  }
+  var eventsDb = deploymentTrackerDb.use("events");
+  eventsDb.view("deployments", "by_repo", {group_level: 3}, function(err, body) {
+    var apps = [];
+
+    body.rows.map(function(row) {
+      var url = row.key[0];
+
+      if (!_.contains(apps, url)) {
+        apps.push(url);
+      }
+    });
+
+    res.json(apps);
+  });
+});
+
 // Get metrics for a specific repo
 app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res) {
   var app = req.app;
