@@ -49,6 +49,7 @@
     "passport": "0.2.2",
     "passport-ibmid-oauth2": "0.0.8",
     "passport-oauth": "1.0.0",
+    "restler": "^3.4.0",
     "underscore": "1.8.3",
     "validator": "4.1.0"
   },

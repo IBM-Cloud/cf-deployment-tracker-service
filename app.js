@@ -18,6 +18,7 @@ var express = require("express"),
   crypto = require("crypto"),
   csv = require("express-csv"), // jshint ignore:line
   hbs = require("hbs"),
+  restler = require("restler"),
   forceSSL = require("express-force-ssl");
 
 
@@ -63,7 +64,8 @@ app.use(expressSession({ secret: process.env.SECRET || "blah",
   cookie: { secure: true, path: "/", httpOnly: true }
 }));
 
-var API_KEY = process.env.API_KEY || "blah";
+var API_KEY = process.env.API_KEY || "blah",
+  GITHUB_STATS_API_KEY = process.env.GITHUB_STATS_API_KEY || "";
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -496,6 +498,22 @@ app.post("/api/v1/track", jsonParser, track);
 
 app.get("/api/v1/whoami", [forceSslIfNotLocal, authenticate()], function (request, response) {
   response.send(request.session.ibmid);
+});
+
+app.get("/api/v1/stats", [forceSslIfNotLocal, authenticate()], function (request, response) {
+  var repo = request.query.repo,
+    baseURL = "https://github-stats.mybluemix.net/api/v1/stats";
+
+  if (GITHUB_STATS_API_KEY === "") {
+    response.json({"error": "GITHUB_STATS_API_KEY is not server on the server"});
+    return;
+  }
+
+  var url = baseURL + "?apiKey=" + GITHUB_STATS_API_KEY + "&repo=" + repo;
+
+  restler.get(url).on("complete", function(data) {
+    response.send(data);
+  });
 });
 
 app.get("/error", function (request, response) {
