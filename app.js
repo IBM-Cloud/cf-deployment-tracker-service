@@ -134,7 +134,7 @@ var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || " ");
 passport.use("ibmid", new IbmIdStrategy({
   clientID: SSO_CLIENT_ID,
   clientSecret: SSO_CLIENT_SECRET,
-  callbackURL: "https://deployment-tracker-dev.mybluemix.net" + "/auth/ibmid/callback",
+  callbackURL: "https://deployment-tracker.mybluemix.net" + "/auth/ibmid/callback",
   passReqToCallback: true
 },
   function(req, accessToken, refreshToken, profile, done) {
@@ -523,7 +523,7 @@ function getStats(repo, callback) {
   var baseURL = "https://github-stats.mybluemix.net/api/v1/stats";
 
   if (GITHUB_STATS_API_KEY === "") {
-    calback(null, null);
+    callback(null, null);
     return;
   }
 
@@ -533,12 +533,12 @@ function getStats(repo, callback) {
       sessionStore.client.get("repo-" + repo, function (err, result) {
       if (err || !result) {
         restler.get(url).on("complete", function(data) {
-          client.setex("repo-" + repo, 21600, data);
+          sessionStore.client.setex("repo-" + repo, 21600, JSON.stringify(data));
           callback(null, data);
         });
       }
       else {
-        callback(null, data)
+        callback(null, JSON.parse(result));
       }
     });
   }
