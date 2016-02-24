@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/IBM-Bluemix/cf-deployment-tracker-service",
   "dependencies": {
+    "async": "^1.5.2",
     "body-parser": "1.14.1",
     "bower": "1.7.1",
     "cf-deployment-tracker-client": "0.0.8",
