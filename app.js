@@ -181,7 +181,35 @@ app.get("/logout", forceSslIfNotLocal ,function (request, response) {
 var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
   jsonParser = bodyParser.json();
 
+function getStats(repo, callback) {
+  var baseURL = "https://github-stats.mybluemix.net/api/v1/stats";
 
+  if (GITHUB_STATS_API_KEY === "") {
+    callback(null, null);
+    return;
+  }
+
+  var url = baseURL + "?apiKey=" + GITHUB_STATS_API_KEY + "&repo=" + repo;
+
+  if (!appEnv.isLocal) {
+    sessionStore.client.get("repo-" + repo, function (err, result) {
+      if (err || !result) {
+        restler.get(url).on("complete", function(data) {
+          sessionStore.client.setex("repo-" + repo, 21600, JSON.stringify(data));
+          callback(null, data);
+        });
+      }
+      else {
+        callback(null, JSON.parse(result));
+      }
+    });
+  }
+  else {
+    restler.get(url).on("complete", function(data) {
+      callback(null, data);
+    });
+  }
+}
 
 app.get("/", forceSslIfNotLocal, function(req, res) {
   res.render("index");
@@ -230,13 +258,12 @@ app.get("/stats", [forceSslIfNotLocal, authenticate()], function(req, res) {
           callback(error);
         }
         else {
-          var app = value;
           value.githubStats = data;
           apps[key] = value;
           callback(null);
         }
       });
-    }, function(err) {
+    }, function() {
       var appsSortedByCount = [];
       for (var url in apps) {
         appsSortedByCount.push(apps[url]);
@@ -251,7 +278,7 @@ app.get("/stats", [forceSslIfNotLocal, authenticate()], function(req, res) {
         return 0;
       }).reverse();
       res.render("stats", {apps: appsSortedByCount});
-      });
+    });
   });
 });
 
@@ -517,37 +544,6 @@ app.post("/api/v1/track", jsonParser, track);
 app.get("/api/v1/whoami", [forceSslIfNotLocal, authenticate()], function (request, response) {
   response.send(request.session.ibmid);
 });
-
-
-function getStats(repo, callback) {
-  var baseURL = "https://github-stats.mybluemix.net/api/v1/stats";
-
-  if (GITHUB_STATS_API_KEY === "") {
-    callback(null, null);
-    return;
-  }
-
-  var url = baseURL + "?apiKey=" + GITHUB_STATS_API_KEY + "&repo=" + repo;
-
-  if (!appEnv.isLocal) {
-      sessionStore.client.get("repo-" + repo, function (err, result) {
-      if (err || !result) {
-        restler.get(url).on("complete", function(data) {
-          sessionStore.client.setex("repo-" + repo, 21600, JSON.stringify(data));
-          callback(null, data);
-        });
-      }
-      else {
-        callback(null, JSON.parse(result));
-      }
-    });
-  }
-  else {
-    restler.get(url).on("complete", function(data) {
-      callback(null, data);
-    });
-  }
-}
 
 app.get("/api/v1/stats", [forceSslIfNotLocal, authenticate()], function (request, response) {
   var repo = request.query.repo;
