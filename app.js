@@ -354,7 +354,8 @@ app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res)
       if (!(url in apps)) {
         apps[url] = {
           url: url,
-          count: 0
+          count: 0,
+          deploys: []
         };
         if (hash) {
           apps[url].url_hash = hash;
@@ -381,11 +382,11 @@ app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res)
       if (validator.isURL(url, {protocols: ["http","https"], require_protocol: true})) {
         apps[url].is_url = true;
       }
-      if (!(year in apps[url])) {
-        apps[url][year] = {};
+      if (!(year in apps[url].deploys)) {
+        apps[url].deploys[year] = {};
       }
-      if (!(month in apps[url][year])) {
-        apps[url][year][month] = row.value;
+      if (!(month in apps[url].deploys[year])) {
+        apps[url].deploys[year][month] = row.value;
         apps[url].count += row.value;
       }
     });
@@ -401,6 +402,7 @@ app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res)
       }
       return 0;
     }).reverse();
+    console.log(appsSortedByCount);
     res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
   });
 });
