@@ -53,6 +53,59 @@
                 </ul>
               </div>
             </div>
+            {{#if githubStats}}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Github Top Level Stats</h3>
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <span class="badge">{{githubStats.Clones}}</span>
+                    Clones
+                  </li>
+                  <li class="list-group-item">
+                    <span class="badge">{{githubStats.Visits}}</span>
+                    Visits
+                  </li>
+                </ul>
+              </div>
+            </div>
+            {{/if}}
+            {{#if githubStats.ReferringSites}}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Github Referring Sites</h3>
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  {{#each githubStats.ReferringSites}}
+                  <li class="list-group-item">
+                    <span class="badge">{{Total}}</span>
+                    {{Link}}
+                  </li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+            {{/if}}
+            {{#if githubStats.PopularContent}}
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Github Popular Content</h3>
+              </div>
+              <div class="panel-body">
+                <ul class="list-group">
+                  {{#each githubStats.PopularContent}}
+                  <li class="list-group-item">
+                    <span class="badge">{{Total}}</span>
+                    {{Link}}
+                  </li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+            {{/if}}
           </div>
           <div class="col-md-5">
             <div class="panel panel-default">

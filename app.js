@@ -402,8 +402,12 @@ app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res)
       }
       return 0;
     }).reverse();
-    console.log(appsSortedByCount);
-    res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
+    getStats(appsSortedByCount[0].url, function(error, result) {
+      if (!error) {
+        appsSortedByCount[0].githubStats = result
+      }
+      res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
+    });
   });
 });
 
