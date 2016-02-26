@@ -404,7 +404,7 @@ app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res)
     }).reverse();
     getStats(appsSortedByCount[0].url, function(error, result) {
       if (!error) {
-        appsSortedByCount[0].githubStats = result
+        appsSortedByCount[0].githubStats = result;
       }
       res.render("repo", {protocolAndHost: protocolAndHost, apps: appsSortedByCount});
     });
