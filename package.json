@@ -45,7 +45,7 @@
     "express-session": "1.11.3",
     "hbs": "3.1.1",
     "http-post": "0.1.1",
-    "node-uuid": "1.4.4",
+    "node-uuid": "1.4.7",
     "passport": "0.2.2",
     "passport-ibmid-oauth2": "0.0.8",
     "passport-oauth": "1.0.0",
