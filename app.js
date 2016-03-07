@@ -18,7 +18,9 @@ var express = require("express"),
   crypto = require("crypto"),
   csv = require("express-csv"), // jshint ignore:line
   hbs = require("hbs"),
-  forceSSL = require("express-force-ssl");
+  restler = require("restler"),
+  forceSSL = require("express-force-ssl"),
+  async = require("async");
 
 
 dotenv.load();
@@ -63,7 +65,8 @@ app.use(expressSession({ secret: process.env.SECRET || "blah",
   cookie: { secure: true, path: "/", httpOnly: true }
 }));
 
-var API_KEY = process.env.API_KEY || "blah";
+var API_KEY = process.env.API_KEY || "blah",
+  GITHUB_STATS_API_KEY = process.env.GITHUB_STATS_API_KEY || "";
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -185,7 +188,35 @@ app.get("/logout", forceSslIfNotLocal ,function (request, response) {
 var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
   jsonParser = bodyParser.json();
 
+function getStats(repo, callback) {
+  var baseURL = "https://github-stats.mybluemix.net/api/v1/stats";
 
+  if (GITHUB_STATS_API_KEY === "") {
+    callback(null, null);
+    return;
+  }
+
+  var url = baseURL + "?apiKey=" + GITHUB_STATS_API_KEY + "&repo=" + repo;
+
+  if (!appEnv.isLocal) {
+    sessionStore.client.get("repo-" + repo, function (err, result) {
+      if (err || !result) {
+        restler.get(url).on("complete", function(data) {
+          sessionStore.client.setex("repo-" + repo, 21600, JSON.stringify(data));
+          callback(null, data);
+        });
+      }
+      else {
+        callback(null, JSON.parse(result));
+      }
+    });
+  }
+  else {
+    restler.get(url).on("complete", function(data) {
+      callback(null, data);
+    });
+  }
+}
 
 app.get("/", forceSslIfNotLocal, function(req, res) {
   res.render("index");
@@ -208,7 +239,8 @@ app.get("/stats", [forceSslIfNotLocal, authenticate()], function(req, res) {
       if (!(url in apps)) {
         apps[url] = {
           url: url,
-          count: 0
+          count: 0,
+          deploys: []
         };
         if (url) {
           apps[url].url_hash = crypto.createHash("md5").update(url).digest("hex");
@@ -217,28 +249,43 @@ app.get("/stats", [forceSslIfNotLocal, authenticate()], function(req, res) {
       if (validator.isURL(url, {protocols: ["http","https"], require_protocol: true})) {
         apps[url].is_url = true;
       }
-      if (!(year in apps[url])) {
-        apps[url][year] = {};
+      if (!(year in apps[url].deploys)) {
+        apps[url].deploys[year] = {};
       }
-      if (!(month in apps[url][year])) {
-        apps[url][year][month] = row.value;
+      if (!(month in apps[url].deploys[year])) {
+        apps[url].deploys[year][month] = row.value;
         apps[url].count += row.value;
       }
     });
-    var appsSortedByCount = [];
-    for (var url in apps) {
-      appsSortedByCount.push(apps[url]);
-    }
-    appsSortedByCount.sort(function(a, b) {
-      if (a.count < b.count) {
-        return -1;
+
+    //get count for each app
+    async.forEachOf(apps, function (value, key, callback) {
+      getStats(key, function(error, data) {
+        if (error) {
+          callback(error);
+        }
+        else {
+          value.githubStats = data;
+          apps[key] = value;
+          callback(null);
+        }
+      });
+    }, function() {
+      var appsSortedByCount = [];
+      for (var url in apps) {
+        appsSortedByCount.push(apps[url]);
       }
-      if (a.count > b.count) {
-        return 1;
-      }
-      return 0;
-    }).reverse();
-    res.render("stats", {apps: appsSortedByCount});
+      appsSortedByCount.sort(function(a, b) {
+        if (a.count < b.count) {
+          return -1;
+        }
+        if (a.count > b.count) {
+          return 1;
+        }
+        return 0;
+      }).reverse();
+      res.render("stats", {apps: appsSortedByCount});
+    });
   });
 });
 
@@ -503,6 +550,24 @@ app.post("/api/v1/track", jsonParser, track);
 
 app.get("/api/v1/whoami", [forceSslIfNotLocal, authenticate()], function (request, response) {
   response.send(request.session.passport.user);
+});
+
+app.get("/api/v1/stats", [forceSslIfNotLocal, authenticate()], function (request, response) {
+  var repo = request.query.repo;
+
+  if (GITHUB_STATS_API_KEY === "") {
+    response.json({"error": "GITHUB_STATS_API_KEY is not server on the server"});
+    return;
+  }
+
+  getStats(repo, function (error, result) {
+    if (error) {
+      response.send(error);
+    }
+    else {
+      response.json(result);
+    }
+  });
 });
 
 app.get("/error", function (request, response) {

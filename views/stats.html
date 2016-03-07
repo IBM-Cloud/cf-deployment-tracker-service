@@ -45,9 +45,16 @@
           {{/if}}
           <span class="badge">{{count}}</span>
         </h2>
+        {{#if githubStats}}
+        <div class="form-control" readonly="readonly">
+          <span>Github Stats:</span>
+          <a href="#">Clones <span class="badge">{{githubStats.Clones}}</span></a>
+          <a href="#">Visits <span class="badge">{{githubStats.Visits}}</span></a>
+        </div>
+        {{/if}}
         {{#if url_hash}}<input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">{{/if}}
         <ul class="list-group">
-          {{#each this}}
+          {{#each deploys}}
           {{#each this}}
           <li class="list-group-item">
             <span class="badge">{{this}}</span>
