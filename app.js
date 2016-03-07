@@ -10,7 +10,7 @@ var express = require("express"),
   passport = require("passport"),
   cfenv = require("cfenv"),
   cookieParser = require("cookie-parser"),
-  IbmIdStrategy = require("passport-ibmid-oauth2").Strategy,
+  IbmIdStrategy = require("passport-idaas-openidconnect").IDaaSOIDCStrategy,
   expressSession = require("express-session"),
   memoryStore = new expressSession.MemoryStore(),
   RedisStore = require("connect-redis")(expressSession),
@@ -77,20 +77,18 @@ function authenticate() {
     if (appEnv.isLocal) {
       return next();
     }
-    if (!request.isAuthenticated() || request.session.ibmid === undefined) {
-      response.redirect("/auth/ibmid");
+    console.log(request.session);
+    if (!request.isAuthenticated() || request.session.passport.user === undefined) {
+      response.redirect("/auth/sso");
       return next();
     }
 
-    console.log(request.session.ibmid);
-    var emails = request.session.ibmid.profile.email;
+    var email = request.session.passport.user.id,
+      ibmer = false;
 
-    var ibmer = false;
-    _.each(emails, function (email) {
-      if (email.toLowerCase().endsWith(".ibm.com")) {
-        ibmer = true;
-      }
-    });
+    if (email.toLowerCase().endsWith(".ibm.com")) {
+      ibmer = true;
+    }
     if (ibmer === false) {
       response.render("error", {message: "You must be an IBM'er to use this app"});
     }
@@ -125,37 +123,46 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-var SSO_CLIENT_ID = (process.env.SSO_CLIENT_ID || " ");
-var SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || " ");
+var SSO_CLIENT_ID = (process.env.SSO_CLIENT_ID || " "),
+  SSO_CLIENT_SECRET = (process.env.SSO_CLIENT_SECRET || " "),
+  SSO_URL = (process.env.SSO_URL || "");
 
-passport.use("ibmid", new IbmIdStrategy({
-  clientID: SSO_CLIENT_ID,
-  clientSecret: SSO_CLIENT_SECRET,
-  callbackURL: "https://deployment-tracker.mybluemix.net" + "/auth/ibmid/callback",
-  passReqToCallback: true
-},
-  function(req, accessToken, refreshToken, profile, done) {
-    req.session.ibmid = {};
-    req.session.ibmid.profile = profile;
-    done(null, profile);
-    return;
+var callbackURL = "https://deployment-tracker.mybluemix.net" + "/auth/sso/callback";
+if (process.env.BASE_URL) {
+  callbackURL = "https://" + process.env.BASE_URL + "/auth/sso/callback";
+}
+
+var Strategy = new IbmIdStrategy({
+  authorizationURL : SSO_URL + "/idaas/oidc/endpoint/default/authorize",
+  tokenURL : SSO_URL + "/idaas/oidc/endpoint/default/token",
+  clientID : SSO_CLIENT_ID,
+  scope : "email",
+  response_type : "code",
+  clientSecret : SSO_CLIENT_SECRET,
+  callbackURL : callbackURL,
+  skipUserProfile : true,
+  issuer : SSO_URL},
+  function(iss, sub, profile, accessToken, refreshToken, params, done) {  // jshint ignore:line
+    process.nextTick(function() {
+      profile.accessToken = accessToken;
+      profile.refreshToken = refreshToken;
+      done(null, profile);
+    });
   }
-));
+);
 
-app.get("/auth/ibmid", [forceSslIfNotLocal, passport.authenticate("ibmid", { scope: ["profile"] })],
-  function (request, response) {
-  request = request;
-  response = response;
-});
+passport.use(Strategy);
 
-app.get("/auth/ibmid/callback", [forceSslIfNotLocal,
-  passport.authenticate("ibmid", { failureRedirect: "/error", scope: ["profile"] })],
+app.get("/auth/sso", [forceSslIfNotLocal], passport.authenticate("openidconnect", {}));
+
+app.get("/auth/sso/callback", [forceSslIfNotLocal,
+  passport.authenticate("openidconnect", { failureRedirect: "/error" })],
   function(req, res) {
   res.redirect("/stats");
 });
 
 app.get("/logout", forceSslIfNotLocal ,function (request, response) {
-  passport._strategy("ibmid").logout(request, response, appEnv.url);
+  passport._strategy("openidconnect").logout(request, response, appEnv.url);
 });
 
 (function(app) {
@@ -495,7 +502,7 @@ app.post("/", urlEncodedParser, track);
 app.post("/api/v1/track", jsonParser, track);
 
 app.get("/api/v1/whoami", [forceSslIfNotLocal, authenticate()], function (request, response) {
-  response.send(request.session.ibmid);
+  response.send(request.session.passport.user);
 });
 
 app.get("/error", function (request, response) {
