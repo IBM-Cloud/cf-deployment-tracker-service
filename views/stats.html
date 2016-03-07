@@ -48,8 +48,14 @@
         {{#if githubStats}}
         <div class="form-control" readonly="readonly">
           <span>Github Stats:</span>
-          <a href="#">Clones <span class="badge">{{githubStats.Clones}}</span></a>
-          <a href="#">Visits <span class="badge">{{githubStats.Visits}}</span></a>
+          <a href="#">Clones <span class="badge">{{githubStats.Clones}}</span></a> |
+          <a href="#">Visits <span class="badge">{{githubStats.Visits}}</span></a> |
+          {{#if url_hash}}
+            <a href="/stats/{{url_hash}}">
+              More info...
+              <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+            </a>
+          {{/if}}
         </div>
         {{/if}}
         {{#if url_hash}}<input type="text" class="form-control" readonly="readonly" value="{{url_hash}}">{{/if}}
