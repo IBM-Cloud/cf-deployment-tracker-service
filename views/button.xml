@@ -4,8 +4,8 @@
     <rect x="{{leftWidth}}" width="{{rightWidth}}" height="64" fill="#41d6c3"/>
   </g>
   <g fill="#fff" text-anchor="middle" font-family="Helvetica Neue',HelveticaNeue,Helvetica,'Segoe UI',Segoe,Calibri,Roboto,'Droid Sans',Meiryo,'Microsoft YaHei',Arial,sans-serif" height="64">
-    <text x="{{leftX}}" y="32" font-size="22" alignment-baseline="central">{{left}}</text>
-    <text x="{{rightX}}" y="32" fill="#1d3649" font-size="18" alignment-baseline="central">{{right}}</text>
+    <text x="{{leftX}}" y="32" font-size="22" dominant-baseline="central">{{left}}</text>
+    <text x="{{rightX}}" y="32" fill="#1d3649" font-size="18" dominant-baseline="central">{{right}}</text>
   </g>
   <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="8" y="8"
      width="48" height="48" viewBox="0 0 2358.3 2200" enable-background="new 0 0 2358.3 2200" xml:space="preserve">
