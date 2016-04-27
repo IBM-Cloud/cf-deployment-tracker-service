@@ -19,3 +19,6 @@ deploy:
   on:
     branch: master
     repo: IBM-Bluemix/cf-deployment-tracker-service
+notifications:
+  slack:
+    secure: fX/TSQVQ0MWj6IhmW8hb0ulVgmDadDGP+mjEaBvYfQbLhHUzB67iZl0+EFAoYBi44yyR8Ja1N2D27tcxrsoaeaFiWRBZL6Ri5IzWw/cyI61CEjp/4xj5YzBFqU/4KYcibBgH3kX3JltXuJnXtjJweeDGEe4ZPCbTGgC73csrvug=
