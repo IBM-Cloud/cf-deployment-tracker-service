@@ -539,7 +539,7 @@ function track(req, res) {
     event.application_uris = req.body.application_uris;
   }
   if ((req.body.bound_vcap_services) && (Object.keys(req.body.bound_vcap_services).length > 0)) {
-      event.bound_vcap_services = req.body.bound_vcap_services;     
+    event.bound_vcap_services = req.body.bound_vcap_services;     
   }
 
   var eventsDb = deploymentTrackerDb.use("events");
