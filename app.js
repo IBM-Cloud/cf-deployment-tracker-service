@@ -538,6 +538,9 @@ function track(req, res) {
   if (req.body.application_uris) {
     event.application_uris = req.body.application_uris;
   }
+  if (req.body.runtime) {
+    event.runtime = req.body.runtime;
+  }  
   if ((req.body.bound_vcap_services) && (Object.keys(req.body.bound_vcap_services).length > 0)) {
     event.bound_vcap_services = req.body.bound_vcap_services;     
   }
