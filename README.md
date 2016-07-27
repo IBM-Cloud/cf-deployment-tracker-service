@@ -13,7 +13,7 @@ The Deployment Tracker tracks deployments of sample applications to [IBM Bluemix
 Get the project and change into the project directory:
 
     $ git clone https://github.com/IBM-Bluemix/cf-deployment-tracker-service.git
-    $ cd deployment-tracker
+    $ cd cf-deployment-tracker-service
 
 ## Configuring Local Development
 
@@ -53,6 +53,16 @@ To deploy to Bluemix, simply:
 
     $ cf push
 
+## Clients
+
+There are a number of language-specific clients for the deployment tracker, including:
+
+- [Node.js](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-node)
+- [Python](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-python)
+- [Java](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-java)
+- [Go](https://github.com/IBM-Bluemix/cf_deployment_tracker_client_go)
+- [Swift](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift)
+
 ## Privacy Notice
 
 This web application includes code to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/cloudant-labs/deployment-tracker) service on each deployment:
@@ -68,7 +78,7 @@ This data is collected from the `VCAP_APPLICATION` and `VCAP_SERVICES` environme
 
 ### Disabling Deployment Tracking
 
-Deployment tracking can be disabled by removing `./admin.js track && ` from the `postinstall` script line of the `scripts` section within `package.json`.
+Disabling the deployment tracker varies based on sample application implementation. Please denote specific disabling instructions within each sample's README.
 
 ### Including This Privacy Notice
 
@@ -90,7 +100,7 @@ This data is collected from the `VCAP_APPLICATION` and `VCAP_SERVICES` environme
 
 ### Disabling Deployment Tracking
 
-Deployment tracking can be disabled by removing `./admin.js track && ` from the `postinstall` script line of the `scripts` section within `package.json`.
+Deployment tracking can be disabled by <disabling-instructions-here>.
 ```
 
 ## License
