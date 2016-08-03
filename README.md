@@ -47,6 +47,10 @@ Create a Cloudant service within Bluemix if one has not already been created:
 
     $ cf create-service cloudantNoSQLDB Shared deployment-tracker-db
 
+Create a Redis service within Bluemix if one has not already been created:
+
+    $ cf create-service rediscloud 30mb deployment-tracker-redis-redis-cloud
+
 ## Deploying
 
 To deploy to Bluemix, simply:
