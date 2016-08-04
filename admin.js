@@ -194,19 +194,24 @@ program
         var eventsDb = deploymentTrackerDb.use("events");
         eventsDb.view("deployments", "by_repo_hash", {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}],
             reduce: false, include_docs: true}, function(err, body) {
-          console.log(body.rows.length + " documents without repository URL hashes");
-          console.log("Adding repository URL hashes...");
-          body.rows.map(function(row) {
-            var event = row.doc;
-            if (event.repository_url_hash) {
-              console.error("Document should not have a repository_url_hash");
-              return;
-            }
-            if (event.repository_url) {
-              event.repository_url_hash = crypto.createHash("md5").update(event.repository_url).digest("hex");
-              eventsDb.insert(event);
-            }
-          });
+          if(err) {
+            console.error("Cleanup task repository_url_hash failed. Invocation of deployments/by_repo_hash returned error: " + err);
+          } 
+          else {   
+            console.log(body.rows.length + " documents without repository URL hashes");
+            console.log("Adding repository URL hashes...");
+            body.rows.map(function(row) {
+              var event = row.doc;
+              if (event.repository_url_hash) {
+                console.error("Document should not have a repository_url_hash");
+                return;
+              }
+              if (event.repository_url) {
+                event.repository_url_hash = crypto.createHash("md5").update(event.repository_url).digest("hex");
+                eventsDb.insert(event);
+              }
+            });
+          }
         });
         break;
     }
