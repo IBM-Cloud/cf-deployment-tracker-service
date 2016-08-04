@@ -195,7 +195,8 @@ program
         eventsDb.view("deployments", "by_repo_hash", {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}],
             reduce: false, include_docs: true}, function(err, body) {
           if(err) {
-            console.error("Cleanup task repository_url_hash failed. Invocation of deployments/by_repo_hash returned error: " + err);
+            console.error("Cleanup task repository_url_hash failed. " +
+                          "Invocation of deployments/by_repo_hash returned error: " + err);
           } 
           else {   
             console.log(body.rows.length + " documents without repository URL hashes");
