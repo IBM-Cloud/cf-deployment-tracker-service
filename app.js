@@ -536,7 +536,12 @@ function track(req, res) {
     event.application_version = req.body.application_version;
   }
   if (req.body.application_uris) {
-    event.application_uris = req.body.application_uris;
+    if(! Array.isArray(req.body.application_uris)) {
+      event.application_uris = [req.body.application_uris];
+    }
+    else {
+      event.application_uris = req.body.application_uris;      
+    }
   }
   if (req.body.runtime) {
     event.runtime = req.body.runtime;
