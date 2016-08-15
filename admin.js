@@ -116,7 +116,12 @@ program
             },
             spaces: {
               map: "function (doc) {emit(doc.space_id, doc); }"
-            }
+            },
+            with_invalid_app_uri_type: {
+              map: "function(doc) { if((doc.application_uris) && (! Array.isArray(doc.application_uris))) {" +
+                "emit(doc.application_uris); }}",
+              reduce: "_count",
+            },
           }
         };
         eventsDb.insert(ddoc, function(err) {
@@ -189,9 +194,10 @@ program
       console.error("No database configured");
       return;
     }
+    var eventsDb = deploymentTrackerDb.use("events");
+
     switch (task) {
-      case "repository_url_hash":
-        var eventsDb = deploymentTrackerDb.use("events");
+      case "repository_url_hash":    
         eventsDb.view("deployments", "by_repo_hash", {startkey: [null], endkey: [null, {}, {}, {}, {}, {}, {}],
             reduce: false, include_docs: true}, function(err, body) {
           if(err) {
@@ -215,6 +221,26 @@ program
           }
         });
         break;
+      case "application_uris_array":
+        // Convert application_uris property to array
+        eventsDb.view("deployments", "with_invalid_app_uri_type", 
+            {reduce: false, include_docs: true}, function(err, body) {
+          if(err) {
+            console.error("Cleanup task application_uris_array. " +
+                          "Invocation of deployments/by_app_uris returned error: " + err);
+          } 
+          else {   
+            console.log(body.rows.length + " documents contain application_uris of invalid type.");
+            body.rows.map(function(row) {
+              var event = row.doc;
+              if((event.application_uris) && (! Array.isArray(event.application_uris))) {
+                event.application_uris = [event.application_uris];
+                eventsDb.insert(event);
+              }
+            });
+          }
+        });
+        break; 
     }
   }).on("--help", function() {
     console.log("  Examples:");
