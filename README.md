@@ -19,7 +19,7 @@ Get the project and change into the project directory:
 
 Local configuration is done through a `.env` file. One environment variable, `VCAP_SERVICES`, is needed in order to configure your local development environment. The value of the `VCAP_SERVICES` is a string representation of a JSON object. Here is an example `.env` file:
 
-    VCAP_SERVICES={"cloudantNoSQLDB": [{"name": "deployment-tracker-db","label": "cloudantNoSQLDB","plan": "Shared","credentials": {"username": "your-username","password": "your-password","host": "your-host","port": 443,"url": "https://your-username:your-password@your-host"}}]}
+    VCAP_SERVICES={"cloudantNoSQLDB": [{"name": "deployment-tracker-db","label": "cloudantNoSQLDB","plan": "Lite","credentials": {"username": "your-username","password": "your-password","host": "your-host","port": 443,"url": "https://your-username:your-password@your-host"}}]}
 
 **Note:**  Services created within Bluemix are automatically added to the `VCAP_SERVICES` environment variable. Therefore, no configuration is needed for Bluemix.
 
@@ -45,7 +45,9 @@ Complete these steps first if you have not already:
 
 Create a Cloudant service within Bluemix if one has not already been created:
 
-    $ cf create-service cloudantNoSQLDB Shared deployment-tracker-db
+    $ cf create-service cloudantNoSQLDB Lite deployment-tracker-db
+
+> Use the [Standard plan](https://www.ibm.com/blogs/bluemix/2016/09/new-cloudant-lite-standard-plans-are-live-in-bluemix-public/) for production deployments.
 
 Create a Redis service within Bluemix if one has not already been created:
 
