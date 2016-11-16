@@ -10,8 +10,8 @@ env:
   - CF_API=https://api.ng.bluemix.net
   - CF_ORGANIZATION=Dev-Advocates
   - CF_SPACE=metrics
-  - secure: fBh5oYlsuJgQ0KrrVY8EUuY2F3aDpjxaNI6CE+EAQREoDYArb0GPYEz4uYpkVDqSpRE3XpgqJjVlcGd2M3WXOA9fmT+T7qTKVWO9ZPKvNAwxTxLN4PCMp/8K6LeEH31Ax/SpnB9rAPdVvQUJ4WKZkr7kdlWrFVAuSpqnZKevpmM=
-  - secure: QD8s2/p+sav2D+QX8Z9a1E4yxijn3E7FngUuC1z9a0Nots9GyM/EzQNGle7DRUIVDv3XQvOLLEc4D1OZJTM8t8eR6PP7sP7K0PKLnAE7i12RETZl60yHX95uuIvcnUGhhfrM0WeG8jof8e3j91GXyP5qptWbOL8tIdtW+Y6AuHo=
+  - secure: VJ0JkhCnEMhhOEUiJzS2zwdjzz9d9o6Rn5KeTMoF1l9EltM3JsYZgRQ/oS3UO/A21jf62rPFpRvsLH1yWIPwaTjiqmWRQWQYPyAB6ekzpohGow245t09KJmnxEdqdRC/LjWCIn+n8awpV01A2rKtErnlJWVzeDK5WfLBaXUvOoc=
+  - secure: PzksGxTfTQmE85IYapCHAeFlrMKhiKugSEZCAUNfNavUPPt1fq690QEoN5p5vzA2IywK0h6hmJdnSoYKu8qbTx7YCHRedgIUqSMfBMrehVqU1jtpZIvGslar3g2g3tMEZAt4O+hQZnpl8SoYIljkHV0PuhE+XJ7lElT4Jt9HnUw=
 before_deploy: npm install -g cf-blue-green
 deploy:
   provider: script
