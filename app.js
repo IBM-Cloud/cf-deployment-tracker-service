@@ -466,8 +466,8 @@ app.get("/stats/:hash/badge.svg", forceSslIfNotLocal, function(req, res) {
     svgData.leftX = svgData.leftWidth / 2 + 1;
     svgData.rightX = svgData.leftWidth + svgData.rightWidth / 2 - 1;
     res.set({"Content-Type": "image/svg+xml",
-             "Cache-Control": "no-cache",
-             "Expires": 0});
+            "Cache-Control": "no-cache",
+            "Expires": 0});
     res.render("badge.xml", svgData);
   });
 });
@@ -502,8 +502,8 @@ app.get("/stats/:hash/button.svg", forceSslIfNotLocal, function(req, res) {
     svgData.leftX = svgData.leftX + 48;
     svgData.rightX = svgData.rightX + 48;
     res.set({"Content-Type": "image/svg+xml",
-             "Cache-Control": "no-cache",
-             "Expires": 0});
+            "Cache-Control": "no-cache",
+            "Expires": 0});
     res.render("button.xml", svgData);
   });
 });
