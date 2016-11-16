@@ -2,7 +2,7 @@
 declared-services:
   deployment-tracker-db:
     label: cloudantNoSQLDB
-    plan: Shared
+    plan: Lite
   deployment-tracker-redis-redis-cloud:
     label: rediscloud
     plan: 30mb
