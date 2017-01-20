@@ -517,6 +517,29 @@ function track(req, res) {
   if (!req.body) {
     return res.sendStatus(400);
   }
+
+  if((req.body.test)&&(req.body.test === true)) {
+    // This is a test request. 
+    // Verify the payload and return appropriate status:
+    //  200 {ok: true} if request meets the spec
+    //  400 if request doesn't include all required properties
+    //      {
+    //       ok: false,
+    //       missing: ["missing_property_name"]
+    //      }
+    var missing = _.filter(["application_id", "application_name", 
+                            "repository_url", "runtime", "space_id"],
+                           function(property) {
+                            return (! (req.body[property]));
+                          });
+    if(missing.length > 0) {
+      return res.status(400).json({ok: false, missing: missing});
+    }
+    else {
+      return res.status(200).json({ok: true});
+    }    
+  }
+
   var event = {
     date_received: new Date().toJSON()
   };
