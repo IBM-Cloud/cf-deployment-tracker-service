@@ -70,6 +70,25 @@ There are a number of language-specific clients for the deployment tracker, incl
 - [Swift](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift)
 - [Electron](https://www.npmjs.com/package/electron-deployment-tracker-client)
 
+### Client testing
+Clients can request payload validation by including `"test": true` in the payload. 
+> The payload is not persisted.
+
+Success response (HTTP code 200):
+
+```
+{ok: true}
+```
+
+Failure response (HTTP code 400):
+
+```
+{
+	ok: false,
+	missing: ["missing_property_id", ...]
+}
+```
+
 ## Privacy Notice
 
 This web application includes code to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/cloudant-labs/deployment-tracker) service on each deployment:

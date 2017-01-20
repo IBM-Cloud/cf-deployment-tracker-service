@@ -1,6 +1,6 @@
 {
   "name": "deployment-tracker",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Tracks deployments of sample applications",
   "main": "app.js",
   "scripts": {
