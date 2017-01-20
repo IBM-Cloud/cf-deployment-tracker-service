@@ -536,6 +536,10 @@ function track(req, res) {
   if (req.body.application_id) {
     // VCAP_APPLICATION.application_id
     event.application_id = req.body.application_id;
+  }
+  if (req.body.instance_index) {
+    // VCAP_APPLICATION.instance_index (Index number of the application instance, e.g. 0,1,...)
+    event.instance_index = req.body.instance_index;
   }  
   if (req.body.space_id) {
     event.space_id = req.body.space_id;

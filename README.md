@@ -76,6 +76,7 @@ This web application includes code to track deployments to [IBM Bluemix](https:/
 
 * Application Name (`application_name`)
 * Application GUID (`application_id`)
+* Application instance index (`instance_index`)
 * Space ID (`space_id`)
 * Application Version (`application_version`)
 * Application URIs (`application_uris`)
