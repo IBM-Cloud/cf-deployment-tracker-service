@@ -68,7 +68,7 @@ There are a number of language-specific clients for the deployment tracker, incl
 - [Java](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-java)
 - [Go](https://github.com/IBM-Bluemix/cf_deployment_tracker_client_go)
 - [Swift](https://github.com/IBM-Bluemix/cf-deployment-tracker-client-swift)
-- [Electron](https://www.npmjs.com/package/electron-deployment-tracker-client)
+- [Electron](https://www.npmjs.com/package/cf-deployment-tracker-client-electron)
 
 ### Client testing
 Clients can request payload validation by including `"test": true` in the payload. 
