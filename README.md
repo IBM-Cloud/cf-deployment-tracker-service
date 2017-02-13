@@ -106,29 +106,19 @@ This data is collected from the `VCAP_APPLICATION` and `VCAP_SERVICES` environme
 
 ### Disabling Deployment Tracking
 
-Disabling the deployment tracker varies based on sample application implementation. Please denote specific disabling instructions within each sample's README.
+Disabling the deployment tracker varies based on sample application implementation. Please include specific disabling instructions within your README's Privacy Notice.
 
-### Including This Privacy Notice
+### Include This Privacy Notice
 
-Please include this privacy notice in the README of any web application that includes deployment tracking code. Following is the privacy notice in markdown format. Note that the "Disabling Deployment Tracking" section may need to be modified based on how deployment tracking is integrated in to the web application.
+When you apply deployment tracking code to an app, you must add the following privacy notice to its README (provided here in markdown format). Note that you must insert specific instructions for your app, telling readers how to disable deployment tracking.
 
 ```
 ## Privacy Notice
 
-This web application includes code to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/cloudant-labs/deployment-tracker) service on each deployment:
+This application includes code that tracks deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The creator of this app added tracking to count deployments and better serve developers. It records only basic information about the deployment. [See details](https://github.com/IBM-Bluemix/cf-deployment-tracker-service#privacy-notice). If you want to disable deployment tracking, follow these steps:
 
-* Application Name (`application_name`)
-* Space ID (`space_id`)
-* Application Version (`application_version`)
-* Application URIs (`application_uris`)
-* Labels of bound services
-* Number of instances for each bound service
+<INSERT REMOVAL STEPS FOR YOUR APP>
 
-This data is collected from the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
-
-### Disabling Deployment Tracking
-
-Deployment tracking can be disabled by <disabling-instructions-here>.
 ```
 
 ## License
