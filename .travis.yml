@@ -21,4 +21,4 @@ deploy:
     repo: IBM-Bluemix/cf-deployment-tracker-service
 notifications:
   slack:
-    secure: MCvsL/ElMeUUPJNK+WmRsI1khA7wDw59e/JX7G5saQ2XKsJd0WleqYnModjmfZVvKVPBWGTsZrOthedW/YGBSSeaBzS+lOpIt+9TZsVugyEZ89yEisL8Q+pzq/Ym43d4+ELiIiKdpDkq4UDbl9SjiDqbC+yxlXtCA7HHrlSD6kE=
+    secure: o9GlwkPxOETe6BWrxQ4Ia9G7trsFo12pdahETxD9CwmAqyJU0zM7FfUpk9WhRdY+3WEyEruiz2QHhk4yiMN2VRT+pJV9UXC8SU3CGY5srGFngVYLcuDaUONwhQJEeRqWfmj4gGXD9JJrZ+mIkmMLxloJSGVuDmAtj9EW6HTk8W8=
