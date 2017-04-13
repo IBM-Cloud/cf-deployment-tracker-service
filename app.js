@@ -89,7 +89,7 @@ function authenticate() {
     var email = request.session.passport.user.id,
       ibmer = false;
 
-    if (email.toLowerCase().endsWith(".ibm.com")) {
+    if (email.toLowerCase().endsWith(".ibm.com") || email.toLowerCase().endsWith("@ibm.com")) {
       ibmer = true;
     }
     if (ibmer === false) {
