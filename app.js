@@ -585,7 +585,7 @@ function track(req, res) {
     event.bound_vcap_services = req.body.bound_vcap_services;     
   }
   else {
-    event.bound_vcap_services = [];
+    event.bound_vcap_services = {};
   }
 
   var eventsDb = deploymentTrackerDb.use("events");
