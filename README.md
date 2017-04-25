@@ -2,6 +2,8 @@
 
 The Deployment Tracker tracks deployments of sample applications to [IBM Bluemix](https://www.bluemix.net/).
 
+> To enable tracking for your sample applications, follow [these instructions](https://github.com/IBM-Bluemix/cf-deployment-tracker-service/wiki/Registering-a-new-sample-application-for-deployment-tracking)
+
 [**_View a summary of deployments tracked._**](https://deployment-tracker.mybluemix.net/)
 
 ## Build Status
