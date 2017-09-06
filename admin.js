@@ -98,15 +98,20 @@ program
           views: {
             by_repo: {
               map: "function(doc) { if (doc.repository_url && doc.repository_url !== '') { " +
+                "if(! doc.hasOwnProperty('instance_index') || " +
+                "(doc.hasOwnProperty('instance_index') && doc.instance_index == '0')) { " +
                 "emit([doc.repository_url, doc.date_received.substring(0, 4), " +
                 "doc.date_received.substring(5, 7), doc.date_received.substring(8, 10), doc.space_id, " +
-                "doc.application_version]); } }",
+                "doc.application_version]); } } }",
               reduce: "_count",
             },
             by_repo_hash: {
-              map: "function(doc) { emit([doc.repository_url_hash, doc.repository_url, " +
+              map: "function(doc) { " +
+                "if(! doc.hasOwnProperty('instance_index') || " +
+                " (doc.hasOwnProperty('instance_index') && doc.instance_index == '0')) { " +
+                "emit([doc.repository_url_hash, doc.repository_url, " +
                 "doc.date_received.substring(0, 4), doc.date_received.substring(5, 7), " +
-                "doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); }",
+                "doc.date_received.substring(8, 10), doc.space_id, doc.application_version]); } }",
               reduce: "_count",
             },
             apps_by_year_and_month: {
