@@ -6,7 +6,7 @@ dist: precise
 group: edge
 env:
   global:
-  - CF_APP=deployment-tracker-migration-test
+  - CF_APP=deployment-tracker
   - CF_API=https://api.ng.bluemix.net
   - CF_ORGANIZATION=Watson-Data-Lab 
   - CF_SPACE=metrics
