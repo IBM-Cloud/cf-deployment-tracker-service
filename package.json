@@ -4,7 +4,6 @@
   "description": "Tracks deployments of sample applications",
   "main": "app.js",
   "scripts": {
-    "postinstall": "bower install --config.interactive=false --allow-root && ./admin.js track && ./admin.js db put && ./admin.js ddoc put && ./admin.js clean application_uris_array",
     "start": "node app.js",
     "test": "grunt"
   },
