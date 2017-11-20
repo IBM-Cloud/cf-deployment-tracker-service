@@ -6,9 +6,9 @@ dist: precise
 group: edge
 env:
   global:
-  - CF_APP=deployment-tracker
+  - CF_APP=deployment-tracker-migration-test
   - CF_API=https://api.ng.bluemix.net
-  - CF_ORGANIZATION=Dev-Advocates
+  - CF_ORGANIZATION=Watson-Data-Lab 
   - CF_SPACE=metrics
   - secure: VJ0JkhCnEMhhOEUiJzS2zwdjzz9d9o6Rn5KeTMoF1l9EltM3JsYZgRQ/oS3UO/A21jf62rPFpRvsLH1yWIPwaTjiqmWRQWQYPyAB6ekzpohGow245t09KJmnxEdqdRC/LjWCIn+n8awpV01A2rKtErnlJWVzeDK5WfLBaXUvOoc=
   - secure: PzksGxTfTQmE85IYapCHAeFlrMKhiKugSEZCAUNfNavUPPt1fq690QEoN5p5vzA2IywK0h6hmJdnSoYKu8qbTx7YCHRedgIUqSMfBMrehVqU1jtpZIvGslar3g2g3tMEZAt4O+hQZnpl8SoYIljkHV0PuhE+XJ7lElT4Jt9HnUw=
@@ -17,8 +17,6 @@ deploy:
   provider: script
   script: cf-blue-green-travis
   on:
-    branch: master
+    branch: migration-test
     repo: IBM-Bluemix/cf-deployment-tracker-service
-notifications:
-  slack:
-    secure: o9GlwkPxOETe6BWrxQ4Ia9G7trsFo12pdahETxD9CwmAqyJU0zM7FfUpk9WhRdY+3WEyEruiz2QHhk4yiMN2VRT+pJV9UXC8SU3CGY5srGFngVYLcuDaUONwhQJEeRqWfmj4gGXD9JJrZ+mIkmMLxloJSGVuDmAtj9EW6HTk8W8=
+    
