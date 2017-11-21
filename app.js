@@ -219,7 +219,7 @@ function getStats(repo, callback) {
 }
 
 app.get("/", forceSslIfNotLocal, function(req, res) {
-  res.status(410).render("index");
+  res.render("index");
 });
 
 // Get metrics overview
