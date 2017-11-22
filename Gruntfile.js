@@ -6,10 +6,10 @@ module.exports = function (grunt) {
         jshintrc: ".jshintrc",
         ignores : [ "node_modules/**/*.js" ]
       },
-      src: ["Gruntfile.js", "app.js", "admin.js"],
+      src: ["Gruntfile.js", "lib/*.js"],
     },
     jscs: {
-      src: ["Gruntfile.js", "app.js", "admin.js"],
+      src: ["Gruntfile.js", "lib/*.js"],
       options: {
         config: ".jscsrc",
         // default in 3.x+ esnext: true, // If you use ES6 http://jscs.info/overview.html#esnext

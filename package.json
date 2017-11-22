@@ -2,10 +2,10 @@
   "name": "deployment-tracker",
   "version": "0.1.5",
   "description": "Tracks deployments of sample applications",
-  "main": "app.js",
+  "main": "lib/gone.js",
   "scripts": {
-    "postinstall": "bower install --config.interactive=false --allow-root",
-    "start": "node app.js",
+    "postinstall": "bower install --config.interactive=false --allow-root && node ./lib/setup.js",
+    "start": "node lib/gone.js",
     "test": "grunt"
   },
   "repository": {
@@ -33,7 +33,6 @@
     "async": "^1.5.2",
     "body-parser": "1.15.0",
     "bower": "1.7.7",
-    "cf-deployment-tracker-client": "0.1.1",
     "cfenv": "1.0.3",
     "cloudant": "1.4.1",
     "commander": "2.8.1",
@@ -41,14 +40,10 @@
     "cookie-parser": "1.4.1",
     "dotenv": "2.0.0",
     "express": "4.13.4",
-    "express-csv": "0.6.0",
-    "express-force-ssl": "0.3.0",
     "express-session": "1.13.0",
     "hbs": "3.1.1",
     "http-post": "0.1.1",
     "node-uuid": "1.4.7",
-    "passport": "0.3.2",
-    "passport-idaas-openidconnect": "1.0.0",
     "restler": "3.4.0",
     "underscore": "1.8.3",
     "validator": "5.1.0"

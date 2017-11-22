@@ -1,16 +1,12 @@
 ---
 declared-services:
-  deployment-tracker-db:
+  deployment-tracker-gone-cloudant:
     label: cloudantNoSQLDB
     plan: Lite
-  deployment-tracker-redis-redis-cloud:
-    label: rediscloud
-    plan: 30mb
+
 applications:
-- name: deployment-tracker
+- name: deployment-tracker-gone
   memory: 256M
-  instances: 3
-  random-route: true
+  instances: 1
   services:
-  - deployment-tracker-db
-  - deployment-tracker-redis-redis-cloud
+  - deployment-tracker-gone-cloudant

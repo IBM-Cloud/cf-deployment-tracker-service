@@ -15,5 +15,6 @@
     "nonew"         : true,
     "undef"         : true,
     "unused"        : true,
-    "strict"        : false
+    "strict"        : false,
+    "esversion"     : 6
 }
