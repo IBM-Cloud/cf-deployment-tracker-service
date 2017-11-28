@@ -185,8 +185,8 @@ app.get("/logout", forceSslIfNotLocal ,function (request, response) {
   }
 })(app);
 
-var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
-  jsonParser = bodyParser.json();
+//var urlEncodedParser = bodyParser.urlencoded({ extended: false }),
+//  jsonParser = bodyParser.json();
 
 function getStats(repo, callback) {
   var baseURL = "https://github-stats.mybluemix.net/api/v1/stats";
@@ -508,83 +508,6 @@ app.get("/stats/:hash/button.svg", forceSslIfNotLocal, function(req, res) {
   });
 });
 
-function track(req, res) {
-  var app = req.app;
-  var deploymentTrackerDb = app.get("deployment-tracker-db");
-  if (!deploymentTrackerDb) {
-    return res.status(500).json({ error: "No database server configured" });
-  }
-  if (!req.body) {
-    return res.sendStatus(400).end();
-  }
-
-  var event = {
-    date_received: new Date().toJSON()
-  };
-  if (req.body.date_sent) {
-    event.date_sent = req.body.date_sent;
-  }
-  if (req.body.code_version) {
-    event.code_version = req.body.code_version;
-  }
-  if (req.body.repository_url) {
-    event.repository_url = req.body.repository_url;
-    event.repository_url_hash = crypto.createHash("md5").update(event.repository_url).digest("hex");
-  }
-  if (req.body.application_name) {
-    event.application_name = req.body.application_name;
-  }
-  if (req.body.application_id) {
-    // VCAP_APPLICATION.application_id
-    event.application_id = req.body.application_id;
-  }
-  if (req.body.hasOwnProperty("instance_index")) {
-    // VCAP_APPLICATION.instance_index (Index number of the application instance, e.g. 0,1,...)
-    event.instance_index = req.body.instance_index;
-  }  
-  if (req.body.space_id) {
-    event.space_id = req.body.space_id;
-  }
-  if (req.body.application_version) {
-    event.application_version = req.body.application_version;
-  }
-  if (req.body.application_uris) {
-    if(! Array.isArray(req.body.application_uris)) {
-      event.application_uris = [req.body.application_uris];
-    }
-    else {
-      event.application_uris = req.body.application_uris;      
-    }
-  }
-  if (req.body.runtime) {
-    event.runtime = req.body.runtime;
-  }  
-  if ((req.body.bound_vcap_services) && (Object.keys(req.body.bound_vcap_services).length > 0)) {
-    event.bound_vcap_services = req.body.bound_vcap_services;     
-  }
-  else {
-    event.bound_vcap_services = {};
-  }
-
-  var eventsDb = deploymentTrackerDb.use("events");
-  eventsDb.insert(event, function (err) {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({error: "Internal Server Error"});
-    }
-    return res.status(410).json({
-      ok: false,
-      error: "This service is discontinued. Refer to " +
-             "https://github.com/IBM-Bluemix/cf-deployment-tracker-service/wiki/Deployment-Tracker-Service-status" +
-             " for more information."
-    });
-  });
-}
-
-app.post("/", urlEncodedParser, track);
-
-app.post("/api/v1/track", jsonParser, track);
-
 app.get("/api/v1/whoami", [forceSslIfNotLocal, authenticate()], function (request, response) {
   response.send(request.session.passport.user);
 });
@@ -629,7 +552,7 @@ http.createServer(app).listen(appEnv.port, appEnv.bind, function(){
   console.log("server starting on " + appEnv.url);
 });
 //-------------------------------------------------------------------------------
-// Copyright IBM Corp. 2015
+// Copyright IBM Corp. 2015,2017
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
