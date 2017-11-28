@@ -227,7 +227,7 @@ app.get("/stats", [forceSslIfNotLocal, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
   var eventsDb = deploymentTrackerDb.use("events");
   eventsDb.view("deployments", "by_repo", {group_level: 3}, function(err, body) {
@@ -294,7 +294,7 @@ app.get("/stats.csv", [forceSslIfNotLocal, authenticate()], function(req, res) {
   var app = req.app;
   var deploymentTrackerDb = app.get("deployment-tracker-db");
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
   var eventsDb = deploymentTrackerDb.use("events");
   eventsDb.view("deployments", "by_repo", {group_level: 3}, function(err, body) {
@@ -308,7 +308,7 @@ app.get("/stats.csv", [forceSslIfNotLocal, authenticate()], function(req, res) {
       var count = row.value;
       apps.push([url, year, month, count]);
     });
-    res.status(410).csv(apps);
+    res.status(200).csv(apps);
   });
 });
 
@@ -318,7 +318,7 @@ app.get("/repos", [forceSslIfNotLocal, checkAPIKey()], function(req, res) {
   var deploymentTrackerDb = app.get("deployment-tracker-db");
 
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
 
   var eventsDb = deploymentTrackerDb.use("events");
@@ -344,7 +344,7 @@ app.get("/stats/:hash", [forceSslIfNotLocal, authenticate()], function(req, res)
   var appsSortedByCount = [];
 
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
   var eventsDb = deploymentTrackerDb.use("events");
   var hash = req.params.hash;
@@ -424,7 +424,7 @@ app.get("/stats/:hash/metrics.json", forceSslIfNotLocal, function(req, res) {
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
   var eventsDb = deploymentTrackerDb.use("events"),
    hash = req.params.hash;
@@ -446,7 +446,7 @@ app.get("/stats/:hash/badge.svg", forceSslIfNotLocal, function(req, res) {
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
   var eventsDb = deploymentTrackerDb.use("events"),
    hash = req.params.hash;
@@ -478,7 +478,7 @@ app.get("/stats/:hash/button.svg", forceSslIfNotLocal, function(req, res) {
     deploymentTrackerDb = app.get("deployment-tracker-db");
 
   if (!deploymentTrackerDb) {
-    return res.status(500);
+    return res.status(500).end();
   }
   var eventsDb = deploymentTrackerDb.use("events"),
    hash = req.params.hash;
@@ -515,7 +515,7 @@ function track(req, res) {
     return res.status(500).json({ error: "No database server configured" });
   }
   if (!req.body) {
-    return res.sendStatus(400);
+    return res.sendStatus(400).end();
   }
 
   var event = {
