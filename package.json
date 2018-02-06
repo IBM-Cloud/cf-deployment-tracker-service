@@ -1,10 +1,10 @@
 {
   "name": "deployment-tracker",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Tracks deployments of sample applications",
   "main": "lib/gone.js",
   "scripts": {
-    "postinstall": "bower install --config.interactive=false --allow-root && node ./lib/setup.js",
+    "postinstall": "bower install --config.interactive=false --allow-root",
     "start": "node lib/gone.js",
     "test": "grunt"
   },
